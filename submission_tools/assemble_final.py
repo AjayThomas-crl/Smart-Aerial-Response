@@ -31,7 +31,7 @@ NOTES = {
                             "Ask for the check to be run WITHOUT adding the files to the Turnitin repository (\"no "
                             "repository\"): the related journal manuscript is still under review, and a stored course "
                             "report could later be matched against it.\n"),
-    "5_GitHub_Repository": "Repository link: <add the GitHub URL here once the repository is pushed>\n",
+    "5_GitHub_Repository": "Repository link: https://github.com/AjayThomas-crl/Smart-Aerial-Response\n",
 }
 
 
