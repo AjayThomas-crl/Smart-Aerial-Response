@@ -1,0 +1,73 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>DFD level 0</title><link rel="stylesheet" href="common.css">
+<style>
+/* Context data flow diagram: the whole system as one process, external entities around it. */
+.ent{fill:#fff;stroke:#444;stroke-width:2}
+.proc{fill:#e8f4f3;stroke:#0b7a75;stroke-width:2.5}
+.f{stroke:#444;stroke-width:1.8;fill:none;marker-end:url(#a)}
+.lab{font-size:15px;fill:#333;paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+.en{font-size:18px;font-weight:bold}
+.es{font-size:14.5px;fill:#555}
+</style></head><body>
+<svg width="1064" height="630" viewBox="0 24 1064 630">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#444"/></marker></defs>
+
+<!-- process -->
+<circle class="proc" cx="532" cy="300" r="118"/>
+<text x="532" y="270" text-anchor="middle" font-size="16" fill="#0b7a75" font-weight="bold">0</text>
+<text x="532" y="298" text-anchor="middle" font-size="21" font-weight="bold">Smart Aerial</text>
+<text x="532" y="323" text-anchor="middle" font-size="21" font-weight="bold">Response system</text>
+<text x="532" y="348" text-anchor="middle" font-size="14.5" fill="#555">sense · trigger · plan · dispatch</text>
+
+<!-- entities: left -->
+<rect class="ent" x="16" y="40" width="234" height="70" rx="4"/>
+<text class="en" x="133" y="70" text-anchor="middle">River / rain gauges</text>
+<text class="es" x="133" y="93" text-anchor="middle">LoRaWAN sensors on ghats</text>
+<rect class="ent" x="16" y="265" width="234" height="70" rx="4"/>
+<text class="en" x="133" y="295" text-anchor="middle">Weather API</text>
+<text class="es" x="133" y="318" text-anchor="middle">Open-Meteo forecast</text>
+<rect class="ent" x="16" y="490" width="234" height="70" rx="4"/>
+<text class="en" x="133" y="520" text-anchor="middle">Satellite flood maps</text>
+<text class="es" x="133" y="543" text-anchor="middle">Sentinel SAR extent</text>
+
+<!-- entities: right -->
+<rect class="ent" x="814" y="40" width="234" height="70" rx="4"/>
+<text class="en" x="931" y="70" text-anchor="middle">ICCC operator</text>
+<text class="es" x="931" y="93" text-anchor="middle">city command centre</text>
+<rect class="ent" x="814" y="265" width="234" height="70" rx="4"/>
+<text class="en" x="931" y="295" text-anchor="middle">Responders / NDRF</text>
+<text class="es" x="931" y="318" text-anchor="middle">boat and ground teams</text>
+
+<!-- entities: bottom -->
+<rect class="ent" x="250" y="576" width="234" height="70" rx="4"/>
+<text class="en" x="367" y="606" text-anchor="middle">Drone docks</text>
+<text class="es" x="367" y="629" text-anchor="middle">rooftop charging bases</text>
+<rect class="ent" x="580" y="576" width="234" height="70" rx="4"/>
+<text class="en" x="697" y="606" text-anchor="middle">Relief drones</text>
+<text class="es" x="697" y="629" text-anchor="middle">MAVLink autopilots</text>
+
+<!-- flows -->
+<line class="f" x1="250" y1="80" x2="438" y2="228"/>
+<text class="lab" x="318" y="118">level, rate, battery</text>
+<line class="f" x1="250" y1="300" x2="412" y2="300"/>
+<text class="lab" x="263" y="290">rain, wind forecast</text>
+<line class="f" x1="250" y1="520" x2="438" y2="372"/>
+<text class="lab" x="344" y="438" text-anchor="middle" transform="rotate(-38.2 344 446)">flood extent image</text>
+
+<line class="f" x1="626" y1="226" x2="812" y2="78"/>
+<text class="lab" x="672" y="222">→ plans, live swarm, alerts</text>
+<line class="f" x1="814" y1="104" x2="642" y2="242"/>
+<text class="lab" x="672" y="246">← approval, overrides</text>
+<line class="f" x1="652" y1="300" x2="812" y2="300"/>
+<text class="lab" x="662" y="290">unreachable points</text>
+
+<line class="f" x1="355" y1="574" x2="460" y2="406"/>
+<text class="lab" x="440" y="492">↑ dock status, water</text>
+<line class="f" x1="482" y1="414" x2="385" y2="574"/>
+<text class="lab" x="440" y="514">↓ door, reload cmds</text>
+<line class="f" x1="709" y1="574" x2="604" y2="406"/>
+<text class="lab" x="680" y="492">↑ telemetry 1 Hz</text>
+<line class="f" x1="582" y1="414" x2="681" y2="574"/>
+<text class="lab" x="680" y="514">↓ missions (QGC WPL)</text>
+</svg>
+</body></html>

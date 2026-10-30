@@ -1,0 +1,40 @@
+{
+ "messages": [
+  {
+   "topic": "sar/<city>/drone/<id>/telemetry",
+   "payload_bytes": 151,
+   "rate_hz": 1.0,
+   "devices": 6,
+   "kbit_s": 9.36
+  },
+  {
+   "topic": "sar/<city>/drone/<id>/event",
+   "payload_bytes": 81,
+   "rate_hz": 0.008333333333333333,
+   "devices": 6,
+   "kbit_s": 0.05
+  },
+  {
+   "topic": "sar/<city>/dock/<id>/status",
+   "payload_bytes": 124,
+   "rate_hz": 0.016666666666666666,
+   "devices": 6,
+   "kbit_s": 0.134
+  },
+  {
+   "topic": "sar/<city>/gauge/<id>/level",
+   "payload_bytes": 78,
+   "rate_hz": 0.0033333333333333335,
+   "devices": 20,
+   "kbit_s": 0.065
+  },
+  {
+   "topic": "sar/<city>/iccc/plan",
+   "payload_bytes": 209,
+   "rate_hz": 0.0005555555555555556,
+   "devices": 1,
+   "kbit_s": 0.001
+  }
+ ],
+ "total_kbit_s": 9.61
+}

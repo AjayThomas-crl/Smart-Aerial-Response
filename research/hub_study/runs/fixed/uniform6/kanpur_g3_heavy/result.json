@@ -1,0 +1,78 @@
+{
+ "city": "kanpur",
+ "grow": 3,
+ "weather": {
+  "precipitation": 10.0,
+  "wind_speed_10m": 30.0,
+  "wind_direction_10m": 270.0
+ },
+ "max_bases": 6,
+ "mode": "fixed",
+ "exit_code": 0,
+ "wall_s": 66.85937190055847,
+ "mask_coverage": 0.22605211141060197,
+ "hubs_given": 6,
+ "hubs_available": 4,
+ "hubs_flooded": [
+  [
+   414,
+   114
+  ],
+  [
+   342,
+   582
+  ]
+ ],
+ "drop_points": 48,
+ "visited": 21,
+ "bases": [
+  [
+   114,
+   570
+  ],
+  [
+   630,
+   594
+  ],
+  [
+   642,
+   198
+  ],
+  [
+   114,
+   174
+  ]
+ ],
+ "sorties": 9,
+ "deliveries_s": [
+  159.84940621682222,
+  167.8114076152547,
+  185.7867291702245,
+  230.43138671113908,
+  312.4784071815887,
+  318.9311212240756,
+  331.4313867111391,
+  376.87396895161123,
+  425.75161150398895,
+  453.6244841312862,
+  474.4842789059995,
+  554.6244841312862,
+  575.4842789059994,
+  652.4421975754243,
+  937.9068428641785,
+  1025.1342498596223,
+  1058.2630640124144,
+  1148.045085625384,
+  1160.314923655423,
+  1196.5491877058967,
+  1743.6982372257835
+ ],
+ "makespan_s": 1960.5910422806867,
+ "unreachable": 27,
+ "max_battery": 0.7971476372743634,
+ "crossings": 0,
+ "outcome": "MULTI_BASE_4",
+ "selection_coverable": 21,
+ "best_single_reach": 6,
+ "session": "/home/ajay/Projects/Smart-Aerial-Response/research/hub_study/runs/fixed/uniform6/kanpur_g3_heavy/session_20261028_152034"
+}

@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Aerial Response · Command Centre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,600;112,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Command-centre look: a dark operations room so the flood map and the coloured drones carry the
+   picture. One loud colour family per drone; flood is always blue, forecast spread always amber. */
+:root{
+  --bg:#0b1117; --panel:#111a22; --panel2:#16212b; --rule:#22313e; --ink:#e7eef4; --muted:#8fa1b1;
+  --flood:#2f8cff; --spread:#ff9a1f; --ok:#45d483; --warn:#ffb000; --bad:#ff5a52; --focus:#ffd34d;
+  --f-display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--f-body);display:flex;flex-direction:column;height:100vh;overflow:hidden}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;gap:18px;padding:10px 18px;border-bottom:1px solid var(--rule);background:#0d151c;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;line-height:1.1;margin-right:auto}
+.brand b{font-family:var(--f-display);font-stretch:112%;font-weight:800;font-size:20px;letter-spacing:.02em}
+.brand span{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-flex;background:var(--panel2);border:1px solid var(--rule);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;padding:7px 16px;border-radius:7px;cursor:pointer;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#0b1117}
+.chip{font-family:var(--f-mono);font-size:12.5px;padding:6px 10px;border:1px solid var(--rule);border-radius:999px;color:var(--muted);white-space:nowrap}
+.chip b{color:var(--ink);font-weight:600}
+.clock{font-family:var(--f-mono);font-size:26px;font-weight:600;letter-spacing:.02em;min-width:9ch;text-align:right}
+.clock small{display:block;font-size:10.5px;letter-spacing:.14em;color:var(--muted);font-weight:500;text-align:right}
+
+/* ---------- pipeline strip ---------- */
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:10px 18px;border-bottom:1px solid var(--rule)}
+.step{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:var(--panel);border:1px solid var(--rule);color:var(--muted);font-size:13px;transition:all .3s}
+.step i{font-style:normal;font-family:var(--f-mono);font-size:11.5px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--rule);flex:none}
+.step.active{color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 1px var(--warn) inset}
+.step.active i{background:var(--warn);color:#000;border-color:var(--warn);animation:pulse 1s infinite}
+.step.done{color:var(--ink)}
+.step.done i{background:var(--ok);border-color:var(--ok);color:#04220f}
+@keyframes pulse{50%{transform:scale(1.15)}}
+
+/* ---------- main grid ---------- */
+main{flex:1;display:grid;grid-template-columns:310px minmax(0,1fr) 380px;gap:12px;padding:12px 18px 14px;min-height:0}
+.left{display:flex;flex-direction:column;gap:12px;min-height:0}
+.mapwrap{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:12px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.maptools{display:flex;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.tog{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:5px 9px;border:1px solid var(--rule);border-radius:999px;cursor:pointer;user-select:none;background:var(--panel2)}
+.tog input{accent-color:var(--focus);margin:0}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+.canvasbox{position:relative;flex:1;min-height:380px;display:grid;place-items:center}
+canvas#map{display:block;border-radius:6px;cursor:default}
+canvas#map.picking{cursor:crosshair}
+.hint{position:absolute;left:12px;bottom:12px;background:rgba(11,17,23,.86);border:1px solid var(--rule);padding:8px 12px;border-radius:8px;font-size:13px;max-width:60ch}
+.lg{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+
+/* ---------- side panel ---------- */
+aside{display:flex;flex-direction:column;gap:12px;min-height:0}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:12px 14px}
+.card h3{margin:0 0 8px;font:600 11.5px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--panel2);border-radius:9px;padding:9px 11px}
+.kpi b{display:block;font:600 26px/1.05 var(--f-mono)}
+.kpi span{font-size:12px;color:var(--muted)}
+.kpi.good b{color:var(--ok)}
+.callout{margin-top:8px;font-size:13px;color:var(--muted);background:var(--panel2);border-radius:9px;padding:8px 11px}
+.callout b{color:var(--ink)}
+.fleet{display:grid;gap:6px;overflow:auto;min-height:0}
+.drone{display:grid;grid-template-columns:30px 1fr auto;gap:2px 10px;align-items:center;background:var(--panel2);border-radius:9px;padding:7px 10px;border:1px solid transparent}
+.drone.hl{border-color:var(--focus)}
+.badge{grid-row:span 2;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font:700 13px var(--f-mono);color:#0b1117}
+.drone .st{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drone .meta{font:12px var(--f-mono);color:var(--muted);text-align:right}
+.bars{display:flex;gap:10px;align-items:center;font:11.5px var(--f-mono);color:var(--muted)}
+.bar{flex:1;height:6px;background:#26333f;border-radius:4px;overflow:hidden;min-width:60px}
+.bar>i{display:block;height:100%;border-radius:4px;transition:width .2s}
+.log{font:12.5px/1.5 var(--f-mono);overflow:auto;flex:1;min-height:0;display:flex;flex-direction:column-reverse}
+.log div{padding:2px 0;border-bottom:1px dashed #1c2834}
+.log time{color:var(--muted);margin-right:6px}
+
+/* ---------- bottom control deck ---------- */
+.controls{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--rule);background:var(--panel2);padding:8px 13px;border-radius:9px;cursor:pointer;font-weight:600}
+.btn:hover{border-color:#3a4c5c}
+.btn.primary{background:var(--focus);color:#141000;border-color:var(--focus)}
+.btn.primary:disabled{opacity:.45;cursor:not-allowed}
+.btn.small{padding:5px 10px;font-size:13px}
+label.f{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--muted);font-family:var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+select,input[type=range]{background:var(--panel2);border:1px solid var(--rule);border-radius:8px;padding:6px 8px}
+input[type=range]{padding:0;accent-color:var(--focus)}
+.console{background:#070b0f;border:1px solid var(--rule);border-radius:12px;padding:10px 12px;font:11.5px/1.45 var(--f-mono);flex:1;min-height:140px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.console .cmd{color:var(--focus)} .console .warn{color:var(--warn)} .console .err{color:var(--bad)} .console .info{color:#b9c7d3}
+.console .hit{color:var(--ok)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:10;padding:20px}
+.modal img{max-width:95vw;max-height:88vh;border-radius:8px;background:#fff}
+.modal p{color:var(--muted);text-align:center;margin:8px 0 0}
+[hidden]{display:none!important}
+
+@media (max-width:1180px){
+  body{height:auto;overflow:auto}
+  main{grid-template-columns:1fr}
+  .mapwrap{order:-1}
+  .canvasbox{min-height:60vh}
+  .steps{grid-template-columns:repeat(3,1fr)}
+  .console{height:220px;flex:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><b>SMART AERIAL RESPONSE</b><span>Flood emergency command centre · UAV swarm</span></div>
+  <div class="seg" role="group" aria-label="City">
+    <button data-city="varanasi" aria-pressed="true">Varanasi</button>
+    <button data-city="kanpur" aria-pressed="false">Kanpur</button>
+  </div>
+  <span class="chip" id="wx">weather</span>
+  <span class="chip" id="src">source</span>
+  <div class="clock" id="clock">T+00:00:00<small>MISSION CLOCK</small></div>
+</header>
+
+<nav class="steps" aria-label="Planner pipeline">
+  <div class="step" data-step="1"><i>1</i>Detect flood</div>
+  <div class="step" data-step="2"><i>2</i>Forecast spread</div>
+  <div class="step" data-step="3"><i>3</i>Place drone bases</div>
+  <div class="step" data-step="4"><i>4</i>Route each drone</div>
+  <div class="step" data-step="5"><i>5</i>Deconflict &amp; export</div>
+  <div class="step" data-step="6"><i>6</i>Fly the swarm</div>
+</nav>
+
+<main>
+<div class="left">
+  <div class="card controls">
+    <h3 style="margin:0">Replay</h3>
+    <div class="row">
+      <button class="btn primary" id="btnPlay">▶ Launch swarm</button>
+      <button class="btn" id="btnReset">↺ Reset</button>
+      <button class="btn" id="btnReveal">Show planning steps</button>
+    </div>
+    <div class="row">
+      <label class="f">Speed
+        <select id="speed"><option value="10">10×</option><option value="30" selected>30×</option><option value="60">60×</option><option value="120">120×</option></select>
+      </label>
+    </div>
+    <h3 style="margin:6px 0 0">Run the planner live</h3>
+    <div class="row">
+      <label class="f">Weather
+        <select id="weather">
+          <option value="heavy">Heavy (10 mm, 30 km/h)</option>
+          <option value="moderate">Moderate (3 mm, 12 km/h)</option>
+          <option value="live">Live (Open-Meteo now)</option>
+        </select>
+      </label>
+      <label class="f">Max drones <span id="nbVal">6</span>
+        <input type="range" id="nb" min="1" max="6" value="6">
+      </label>
+    </div>
+    <div class="row">
+      <label class="tog"><input type="checkbox" id="pick">Operator picks flood colour on map</label>
+      <button class="btn small" id="clearPts" hidden>Clear points</button>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="btnRun">⚡ Plan swarm now</button>
+      <span id="runNote" style="font-size:12.5px;color:var(--muted)"></span>
+    </div>
+  </div>
+  <div class="console" id="console" aria-live="polite"><span class="info">Planner console. Press “Plan swarm now” to run the real A.D.A.P.T. planner (adapt_core/main.py) on this city.</span>
+</div>
+</div>
+  <section class="mapwrap">
+    <div class="maptools">
+      <label class="tog"><input type="checkbox" id="lyFlood" checked><span class="sw" style="background:var(--flood)"></span>Flood now</label>
+      <label class="tog"><input type="checkbox" id="lySpread" checked><span class="sw" style="background:var(--spread)"></span>Forecast spread</label>
+      <label class="tog"><input type="checkbox" id="lyRoutes" checked><span class="sw" style="background:#fff"></span>Planned routes</label>
+      <label class="tog"><input type="checkbox" id="lyLabels" checked>Labels</label>
+      <span style="flex:1"></span>
+      <span class="lg"><span class="sw" style="background:#fff;border-radius:50%"></span>pending</span>
+      <span class="lg"><span class="sw" style="background:var(--ok);border-radius:50%"></span>delivered</span>
+      <span class="lg" style="color:var(--bad)">✕ <span style="color:var(--muted)">unreachable</span></span>
+            <button class="btn small" id="btnPlanner">Planner map</button>
+    </div>
+    <div class="canvasbox" id="canvasbox">
+      <canvas id="map" aria-label="Flood map with drone swarm"></canvas>
+      <div class="hint" id="hint" hidden></div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="card">
+      <h3 id="cityTitle">City</h3>
+      <div class="kpis">
+        <div class="kpi"><b id="kAir">0/0</b><span>drones airborne</span></div>
+        <div class="kpi good"><b id="kKits">0/0</b><span>relief kits delivered</span></div>
+        <div class="kpi"><b id="kDist">0.0</b><span>km flown by the swarm</span></div>
+        <div class="kpi good"><b id="kCross">0</b><span>route crossings (airspace)</span></div>
+      </div>
+      <div class="callout" id="callout"></div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;min-height:0;flex:1.3">
+      <h3>Fleet telemetry</h3>
+      <div class="fleet" id="fleet"></div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;min-height:0;flex:1">
+      <h3>Event log</h3>
+      <div class="log" id="log"></div>
+    </div>
+  </aside>
+</main>
+
+
+
+<div class="modal" id="modal" hidden><div><img id="modalImg" alt="Route map rendered by the planner"><p>Rendered by the planner itself (mission_route_map.png). Click anywhere to close.</p></div></div>
+
+<script src="data/varanasi.js"></script>
+<script src="data/kanpur.js"></script>
+<script>
+"use strict";
+/* ============================== constants ============================== */
+const TAKEOFF_S = 20;      // climb to 100 m
+const DROP_S = 40;         // loiter 5 s + descend to 10 m + release + climb back (mission file sequence)
+const SWAP_S = 90;         // battery swap + reload of relief kits at base (assumption)
+const LAND_S = 15;
+const $ = id => document.getElementById(id);
+const cv = $("map"), ctx = cv.getContext("2d");
+
+/* ============================== state ============================== */
+const S = {
+  city: "varanasi", data: null, base: "data/", imgs: {}, sims: [], events: [],
+  t: 0, playing: false, speed: 30, last: 0, logIdx: 0, kits: 0,
+  reveal: { flood: 1, spread: 1, bases: 1, routes: 1, drones: 1 }, revealing: false,
+  live: false, server: false, picks: [], scale: 1, hl: null,
+};
+
+/* ============================== data loading ============================== */
+function loadImage(src) {
+  return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+}
+async function useDataset(data, base, label) {
+  S.data = data; S.base = base;
+  const I = data.image;
+  const [map, flood, spread] = await Promise.all([loadImage(base + I.map), loadImage(base + I.flood), loadImage(base + I.spread)]);
+  S.imgs = { map, flood, spread };
+  buildSims(); resetSim();
+  $("src").innerHTML = `data: <b>${label}</b>`;
+  const w = data.weather;
+  $("wx").innerHTML = `rain <b>${(+w.precipitation).toFixed(1)} mm</b> · wind <b>${(+w.wind_speed_10m).toFixed(0)} km/h</b> from <b>${compass(w.wind_direction_10m)}</b>`;
+  $("cityTitle").textContent = `${data.name} · ${data.region}`;
+  const st = data.stats;
+  $("callout").innerHTML = st.best_single_reach != null
+    ? `Planner's estimate: one drone from the best single site reaches only <b>${st.best_single_reach} of ${st.coverable}</b> drop points. The swarm of <b>${st.bases}</b> serves <b>${st.visited}</b> in <b>${st.sorties}</b> sorties, every sortie under the 80% battery limit (highest ${(st.max_battery*100).toFixed(1)}%).`
+    : `${st.bases} drones, ${st.visited} of ${st.drop_points} drops planned.`;
+  $("btnPlanner").disabled = !I.planner;
+  resize(); renderFleet(); draw();
+}
+function compass(deg) { return ["N","NE","E","SE","S","SW","W","NW"][Math.round(((+deg % 360) / 45)) % 8]; }
+
+async function selectCity(city) {
+  S.city = city; S.picks = [];
+  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.city === city));
+  setSteps(0);
+  const baked = (window.SAR_DATA || {})[city];
+  if (baked) await useDataset(baked, "data/", `pre-computed run (${baked.session})`);
+  log(`Loaded ${baked ? baked.name : city}: ${baked ? baked.stats.bases : "?"} drones ready at their bases.`);
+}
+
+/* ============================== simulation model ============================== */
+// Each drone gets a timeline of segments built from the planner's routed path:
+// take-off → legs at 5 m/s → dwell at every drop → battery swap at every reload → landing.
+function buildSims() {
+  const d = S.data, mpp = d.meters_per_pixel, v = d.vehicle.speed_mps;
+  S.events = [];
+  S.sims = d.drones.map(dr => {
+    const P = dr.path, drops = new Set(dr.drops), reloads = new Set(dr.reloads);
+    const segs = []; let t = 0;
+    const sortieOf = i => dr.sorties.findIndex(s => i >= s.start && i <= s.end);
+    const lastDropIn = dr.sorties.map(s => Math.max(...dr.drops.filter(x => x >= s.start && x <= s.end)));
+    segs.push({ t0: 0, t1: TAKEOFF_S, kind: "takeoff", i: 0 }); t = TAKEOFF_S;
+    S.events.push({ t: 0, txt: `Drone ${dr.id} cleared for take-off from Base ${dr.id}`, id: dr.id });
+    let dropNo = 0, distCum = 0; const dropTimes = [];
+    for (let i = 0; i < P.length - 1; i++) {
+      const a = P[i], b = P[i + 1];
+      const dist = Math.hypot(b[0] - a[0], b[1] - a[1]) * mpp;
+      if (dist > 0) { segs.push({ t0: t, t1: t + dist / v, kind: "move", i, a, b, d0: distCum, dist }); t += dist / v; distCum += dist; }
+      const j = i + 1;
+      if (drops.has(j)) {
+        dropNo++;
+        segs.push({ t0: t, t1: t + DROP_S, kind: "drop", i: j, dropNo });
+        dropTimes.push(t + DROP_S * 0.6);
+        S.events.push({ t: t + DROP_S * 0.6, txt: `Drone ${dr.id} released relief kit #${dropNo}`, id: dr.id, drop: true, pt: P[j] });
+        t += DROP_S;
+      }
+      if (reloads.has(j) && j < P.length - 1) {
+        segs.push({ t0: t, t1: t + SWAP_S, kind: "swap", i: j });
+        S.events.push({ t, txt: `Drone ${dr.id} back at base - battery swap and reload`, id: dr.id });
+        t += SWAP_S;
+      }
+    }
+    segs.push({ t0: t, t1: t + LAND_S, kind: "land", i: P.length - 1 }); t += LAND_S;
+    S.events.push({ t, txt: `Drone ${dr.id} landed - mission complete (${dropNo} kits)`, id: dr.id });
+    // distance at the start of each sortie, for the battery gauge
+    const cum = [0]; for (let i = 0; i < P.length - 1; i++) cum.push(cum[i] + Math.hypot(P[i+1][0]-P[i][0], P[i+1][1]-P[i][1]) * mpp);
+    return { dr, segs, end: t, cum, sortieOf, lastDropIn, dropTimes, totalDrops: dr.drops.length };
+  });
+  S.events.sort((a, b) => a.t - b.t);
+  S.missionEnd = Math.max(...S.sims.map(s => s.end));
+}
+
+function stateAt(sim, t) {
+  const { segs, dr, cum } = sim;
+  const dropsDone = sim.dropTimes.filter(x => x <= t).length;
+  if (t >= sim.end) return { pos: dr.home, kind: "done", idx: dr.path.length - 1, battery: 1, payload: 0, flown: cum[cum.length - 1], dropsDone, sortie: dr.sorties.length };
+  let lo = 0, hi = segs.length - 1;
+  while (lo < hi) { const m = (lo + hi + 1) >> 1; if (segs[m].t0 <= t) lo = m; else hi = m - 1; }
+  const s = segs[lo];
+  let pos, flown, frac = 0;
+  if (s.kind === "move") {
+    frac = Math.min(1, (t - s.t0) / (s.t1 - s.t0));
+    pos = [s.a[0] + (s.b[0] - s.a[0]) * frac, s.a[1] + (s.b[1] - s.a[1]) * frac];
+    flown = s.d0 + s.dist * frac;
+  } else { pos = dr.path[s.i]; flown = cum[s.i]; }
+  const k = Math.max(0, sim.sortieOf(s.kind === "move" ? s.i + 1 : s.i));
+  const so = dr.sorties[k];
+  let battery = 1, payload = 0;
+  if (so) {
+    const sd = (cum[so.end] - cum[so.start]) || 1;
+    battery = 1 - so.battery * Math.min(1, Math.max(0, (flown - cum[so.start]) / sd));
+    if (s.kind === "swap") battery = 1 - so.battery + so.battery * Math.min(1, (t - s.t0) / (s.t1 - s.t0));
+    // kits still on board = kits of this sortie minus the ones already released
+    const released = sim.dropTimes.filter((x, n) => x <= t && dr.drops[n] >= so.start && dr.drops[n] <= so.end).length;
+    payload = s.kind === "swap" ? 0 : (so.drops - released) * S.data.vehicle.payload_per_drop_kg;
+  }
+  let label;
+  if (s.kind === "takeoff") label = "Taking off";
+  else if (s.kind === "drop") label = `Dropping kit #${s.dropNo}`;
+  else if (s.kind === "swap") label = "Battery swap + reload";
+  else if (s.kind === "land") label = "Landing";
+  else label = s.i >= sim.lastDropIn[k] ? "Returning to base" : "En route to drop";
+  const heading = s.kind === "move" ? Math.atan2(s.b[1] - s.a[1], s.b[0] - s.a[0]) : null;
+  return { pos, kind: s.kind, label, idx: s.i, battery, payload, flown, dropsDone, sortie: k + 1, heading, seg: s };
+}
+
+/* ============================== drawing ============================== */
+function resize() {
+  if (!S.data) return;
+  const box = $("canvasbox").getBoundingClientRect();
+  const { w, h } = S.data.image;
+  const sc = Math.min((box.width - 16) / w, (box.height - 16) / h, 1.6);
+  S.scale = Math.max(0.3, sc);
+  const dpr = window.devicePixelRatio || 1;
+  cv.style.width = (w * S.scale) + "px"; cv.style.height = (h * S.scale) + "px";
+  cv.width = Math.round(w * S.scale * dpr); cv.height = Math.round(h * S.scale * dpr);
+  ctx.setTransform(S.scale * dpr, 0, 0, S.scale * dpr, 0, 0);
+  draw();
+}
+
+function draw() {
+  const d = S.data; if (!d) return;
+  const { w, h } = d.image, R = S.reveal, k = 1 / S.scale;
+  ctx.clearRect(0, 0, w, h);
+  if (S.imgs.map) { ctx.globalAlpha = 1; ctx.drawImage(S.imgs.map, 0, 0, w, h); }
+  // darken the basemap a touch so drones and overlays pop on a projector
+  ctx.fillStyle = "rgba(6,12,18,0.28)"; ctx.fillRect(0, 0, w, h);
+  if ($("lySpread").checked && S.imgs.spread && R.spread) { ctx.globalAlpha = R.spread; ctx.drawImage(S.imgs.spread, 0, 0, w, h); }
+  if ($("lyFlood").checked && S.imgs.flood && R.flood) { ctx.globalAlpha = R.flood; ctx.drawImage(S.imgs.flood, 0, 0, w, h); }
+  ctx.globalAlpha = 1;
+
+  const states = S.sims.map(sim => stateAt(sim, S.t));
+  // planned routes (faint) and flown part (bright)
+  if ($("lyRoutes").checked && R.routes) {
+    S.sims.forEach((sim, n) => {
+      const P = sim.dr.path, upto = Math.max(1, Math.floor(P.length * R.routes));
+      ctx.save(); ctx.lineJoin = ctx.lineCap = "round";
+      ctx.strokeStyle = sim.dr.color; ctx.globalAlpha = 0.42; ctx.lineWidth = 2.2 * k * 1.2; ctx.setLineDash([5 * k, 5 * k]);
+      ctx.beginPath(); P.slice(0, upto).forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+      ctx.restore();
+    });
+  }
+  S.sims.forEach((sim, n) => {
+    const st = states[n]; if (S.t <= 0) return;
+    const P = sim.dr.path;
+    ctx.save(); ctx.lineJoin = ctx.lineCap = "round"; ctx.strokeStyle = sim.dr.color; ctx.lineWidth = 3.4 * k;
+    ctx.shadowColor = sim.dr.color; ctx.shadowBlur = 6;
+    ctx.beginPath(); ctx.moveTo(P[0][0], P[0][1]);
+    const last = st.kind === "move" ? st.seg.i : st.idx;
+    for (let i = 1; i <= last; i++) ctx.lineTo(P[i][0], P[i][1]);
+    ctx.lineTo(st.pos[0], st.pos[1]); ctx.stroke(); ctx.restore();
+  });
+
+  // drop points
+  if (R.bases) {
+    const delivered = new Set(S.events.filter(e => e.drop && e.t <= S.t).map(e => e.pt.join(",")));
+    d.drop_points.forEach((p, i) => {
+      const un = d.unreachable.includes(i);
+      ctx.beginPath(); ctx.arc(p[0], p[1], 4.6 * k, 0, 7);
+      if (un) {
+        ctx.strokeStyle = "#ff5a52"; ctx.lineWidth = 2.4 * k; const r = 5 * k;
+        ctx.beginPath(); ctx.moveTo(p[0]-r, p[1]-r); ctx.lineTo(p[0]+r, p[1]+r); ctx.moveTo(p[0]+r, p[1]-r); ctx.lineTo(p[0]-r, p[1]+r); ctx.stroke();
+        return;
+      }
+      const done = [...delivered].some(s => { const [x, y] = s.split(",").map(Number); return Math.abs(x - p[0]) < 1.5 && Math.abs(y - p[1]) < 1.5; });
+      ctx.fillStyle = done ? "#45d483" : "rgba(255,255,255,0.92)"; ctx.fill();
+      ctx.lineWidth = 1.6 * k; ctx.strokeStyle = "#0b1117"; ctx.stroke();
+    });
+    // bases
+    S.sims.forEach(sim => {
+      const [x, y] = sim.dr.home, s = 9 * k * (R.bases < 1 ? R.bases : 1);
+      ctx.save(); ctx.translate(x, y);
+      ctx.fillStyle = "#0b1117"; ctx.strokeStyle = sim.dr.color; ctx.lineWidth = 2.6 * k;
+      ctx.beginPath(); ctx.moveTo(0, -s * 1.1); ctx.lineTo(s, -s * 0.1); ctx.lineTo(s, s); ctx.lineTo(-s, s); ctx.lineTo(-s, -s * 0.1); ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = sim.dr.color; ctx.font = `700 ${10 * k}px IBM Plex Mono, monospace`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(sim.dr.id, 0, s * 0.35);
+      if ($("lyLabels").checked) {
+        ctx.font = `600 ${11 * k}px IBM Plex Sans, sans-serif`; ctx.fillStyle = "#fff"; ctx.strokeStyle = "rgba(0,0,0,.85)"; ctx.lineWidth = 3 * k;
+        ctx.strokeText(`BASE ${sim.dr.id}`, 0, -s * 1.9); ctx.fillText(`BASE ${sim.dr.id}`, 0, -s * 1.9);
+      }
+      ctx.restore();
+    });
+  }
+
+  // drones
+  if (R.drones && S.t > 0) {
+    S.sims.forEach((sim, n) => {
+      const st = states[n]; if (st.kind === "done") return;
+      drawDrone(st.pos[0], st.pos[1], sim.dr.color, sim.dr.id, st, k);
+    });
+  }
+  // operator picks
+  S.picks.forEach(([x, y]) => {
+    ctx.strokeStyle = "#ffd34d"; ctx.lineWidth = 2 * k; const r = 8 * k;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.moveTo(x - r * 1.6, y); ctx.lineTo(x + r * 1.6, y); ctx.moveTo(x, y - r * 1.6); ctx.lineTo(x, y + r * 1.6); ctx.stroke();
+  });
+}
+
+function drawDrone(x, y, color, id, st, k) {
+  const r = 9.5 * k, now = performance.now();
+  ctx.save(); ctx.translate(x, y);
+  if (st.kind === "drop") {             // release pulse
+    const ph = (now % 1200) / 1200;
+    ctx.beginPath(); ctx.arc(0, 0, r * (1.2 + ph * 2.2), 0, 7);
+    ctx.strokeStyle = color; ctx.globalAlpha = 1 - ph; ctx.lineWidth = 2 * k; ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  ctx.shadowColor = "rgba(0,0,0,.7)"; ctx.shadowBlur = 6;
+  if (st.heading != null) ctx.rotate(st.heading + Math.PI / 4);
+  ctx.strokeStyle = color; ctx.lineWidth = 2.2 * k;
+  ctx.beginPath(); ctx.moveTo(-r, -r); ctx.lineTo(r, r); ctx.moveTo(r, -r); ctx.lineTo(-r, r); ctx.stroke();
+  const spin = (now / 60) % (Math.PI * 2);
+  [[-r, -r], [r, -r], [r, r], [-r, r]].forEach(([px, py]) => {
+    ctx.beginPath(); ctx.arc(px, py, r * 0.55, 0, 7); ctx.fillStyle = "rgba(11,17,23,.85)"; ctx.fill();
+    ctx.strokeStyle = color; ctx.lineWidth = 1.4 * k; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px + Math.cos(spin) * r * .5, py + Math.sin(spin) * r * .5); ctx.lineTo(px - Math.cos(spin) * r * .5, py - Math.sin(spin) * r * .5); ctx.stroke();
+  });
+  ctx.shadowBlur = 0;
+  ctx.beginPath(); ctx.arc(0, 0, r * 0.62, 0, 7); ctx.fillStyle = color; ctx.fill();
+  ctx.restore();
+  ctx.save(); ctx.translate(x, y);
+  ctx.fillStyle = "#0b1117"; ctx.font = `700 ${10 * k}px IBM Plex Mono, monospace`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText(id, 0, 0.5 * k);
+  ctx.restore();
+}
+
+/* ============================== side panel ============================== */
+function renderFleet() {
+  $("fleet").innerHTML = S.sims.map(sim => `
+    <div class="drone" id="dr${sim.dr.id}" data-id="${sim.dr.id}">
+      <div class="badge" style="background:${sim.dr.color}">D${sim.dr.id}</div>
+      <div class="st">Ready at Base ${sim.dr.id}</div>
+      <div class="meta">0/${sim.totalDrops} kits</div>
+      <div class="bars"><span>BAT</span><div class="bar"><i style="width:100%;background:var(--ok)"></i></div><span class="pl">0.00 kg</span></div>
+      <div class="meta so">S1/${sim.dr.sorties.length}</div>
+    </div>`).join("");
+  document.querySelectorAll(".drone").forEach(el => el.addEventListener("mouseenter", () => { S.hl = +el.dataset.id; }));
+}
+function updatePanel() {
+  if (!S.data) return;
+  let air = 0, kits = 0, dist = 0;
+  S.sims.forEach(sim => {
+    const st = stateAt(sim, S.t), el = $("dr" + sim.dr.id); if (!el) return;
+    const flying = S.t > 0 && !["done", "swap"].includes(st.kind);
+    if (flying) air++;
+    kits += Math.min(st.dropsDone, sim.totalDrops); dist += st.flown || 0;
+    el.querySelector(".st").textContent = S.t <= 0 ? `Ready at Base ${sim.dr.id}` : st.kind === "done" ? "Mission complete ✓" : st.label;
+    el.querySelector(".meta").textContent = `${Math.min(st.dropsDone, sim.totalDrops)}/${sim.totalDrops} kits`;
+    const b = Math.max(0, st.battery), bar = el.querySelector(".bar>i");
+    bar.style.width = (b * 100).toFixed(0) + "%";
+    bar.style.background = b < 0.3 ? "var(--bad)" : b < 0.5 ? "var(--warn)" : "var(--ok)";
+    el.querySelector(".pl").textContent = `${(st.payload || 0).toFixed(2)} kg`;
+    el.querySelector(".so").textContent = st.kind === "done" ? `${sim.dr.sorties.length}/${sim.dr.sorties.length} sorties` : `S${Math.max(1, st.sortie || 1)}/${sim.dr.sorties.length} · ${(b * 100).toFixed(0)}%`;
+  });
+  const tot = S.sims.reduce((a, s) => a + s.totalDrops, 0);
+  $("kAir").textContent = `${air}/${S.sims.length}`;
+  $("kKits").textContent = `${kits}/${tot}`;
+  $("kDist").textContent = (dist / 1000).toFixed(1);
+  $("kCross").textContent = S.data.stats.crossings;
+  const t = Math.floor(S.t), hh = String(Math.floor(t / 3600)).padStart(2, "0"), mm = String(Math.floor(t % 3600 / 60)).padStart(2, "0"), ss = String(t % 60).padStart(2, "0");
+  $("clock").firstChild.nodeValue = `T+${hh}:${mm}:${ss}`;
+  while (S.t > 0 && S.logIdx < S.events.length && S.events[S.logIdx].t <= S.t) {
+    const e = S.events[S.logIdx++];
+    log(e.txt, e.t, S.sims.find(s => s.dr.id === e.id)?.dr.color);
+  }
+  if (S.t >= S.missionEnd && S.playing) {
+    S.playing = false; $("btnPlay").textContent = "▶ Launch swarm"; setSteps(7);
+    log(`ALL DRONES LANDED. ${kits} relief kits delivered across ${S.data.name} in ${fmtDur(S.missionEnd)} of flight time.`, S.t, "#45d483");
+  }
+}
+function fmtDur(s) { return `${Math.floor(s / 60)} min ${Math.round(s % 60)} s`; }
+function log(txt, t, color) {
+  const div = document.createElement("div");
+  const tt = t != null ? `T+${String(Math.floor(t / 60)).padStart(2, "0")}:${String(Math.floor(t % 60)).padStart(2, "0")}` : "--:--";
+  div.innerHTML = `<time>${tt}</time>${color ? `<span style="color:${color}">■</span> ` : ""}${txt}`;
+  $("log").prepend(div);
+}
+
+/* ============================== loop & controls ============================== */
+function frame(now) {
+  const dt = S.last ? (now - S.last) / 1000 : 0; S.last = now;
+  if (S.playing) { S.t = Math.min(S.missionEnd, S.t + dt * S.speed); updatePanel(); }
+  draw();
+  requestAnimationFrame(frame);
+}
+function resetSim() {
+  S.t = 0; S.playing = false; S.logIdx = 0; $("log").innerHTML = "";
+  $("btnPlay").textContent = "▶ Launch swarm"; updatePanel();
+}
+function setSteps(n) {   // n = step currently active; steps before it are done
+  document.querySelectorAll(".step").forEach(el => {
+    const k = +el.dataset.step; el.classList.toggle("done", k < n); el.classList.toggle("active", k === n);
+  });
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function tween(key, ms) { const t0 = performance.now(); for (;;) { const p = Math.min(1, (performance.now() - t0) / ms); S.reveal[key] = p; if (p >= 1) break; await sleep(16); } }
+async function revealSequence() {
+  if (S.revealing) return; S.revealing = true; resetSim();
+  Object.keys(S.reveal).forEach(k => S.reveal[k] = 0);
+  setSteps(1); log("Step 1 - flood pixels segmented from the map (HSV colour sampling + morphology).");
+  await tween("flood", 900); await sleep(500);
+  setSteps(2); log(`Step 2 - flood spread forecast for ${S.data.horizon_h} h from rain and wind (amber).`);
+  await tween("spread", 900); await sleep(500);
+  setSteps(3); log(`Step 3 - ${S.data.stats.bases} dry, flood-clear launch bases chosen; ${S.data.stats.drop_points} drop points placed on flood edges.`);
+  await tween("bases", 700); await sleep(500);
+  setSteps(4); log("Step 4 - each drone routed with D* Lite around current and forecast flood, split into battery-safe sorties.");
+  await tween("routes", 1400); await sleep(300);
+  setSteps(5); log(`Step 5 - route-crossing check: ${S.data.stats.crossings} crossings. One QGC mission file per drone exported.`);
+  await sleep(900);
+  S.reveal.drones = 1; setSteps(6); S.revealing = false;
+}
+
+document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => selectCity(b.dataset.city)));
+$("btnPlay").addEventListener("click", () => {
+  if (S.t >= S.missionEnd) resetSim();
+  S.playing = !S.playing; S.last = 0;
+  Object.keys(S.reveal).forEach(k => S.reveal[k] = 1);
+  $("btnPlay").textContent = S.playing ? "❚❚ Pause" : "▶ Resume";
+  if (S.playing) setSteps(6);
+});
+$("btnReset").addEventListener("click", () => { resetSim(); setSteps(0); });
+$("btnReveal").addEventListener("click", revealSequence);
+$("speed").addEventListener("change", e => S.speed = +e.target.value);
+["lyFlood", "lySpread", "lyRoutes", "lyLabels"].forEach(id => $(id).addEventListener("change", draw));
+$("nb").addEventListener("input", e => $("nbVal").textContent = e.target.value);
+$("btnPlanner").addEventListener("click", () => { if (!S.data.image.planner) return; $("modalImg").src = S.base + S.data.image.planner; $("modal").hidden = false; });
+$("modal").addEventListener("click", () => $("modal").hidden = true);
+window.addEventListener("resize", resize);
+window.addEventListener("keydown", e => { if (e.key === "Escape") $("modal").hidden = true; if (e.key === " " && e.target === document.body) { e.preventDefault(); $("btnPlay").click(); } });
+
+/* operator colour picking: clicks become --sample-points for the planner (display pixels) */
+$("pick").addEventListener("change", e => {
+  cv.classList.toggle("picking", e.target.checked); $("clearPts").hidden = !e.target.checked;
+  const hint = $("hint"); hint.hidden = !e.target.checked;
+  hint.textContent = "Operator mode: click 3-5 points inside the red flood areas, then press “Plan swarm now”. These clicks set the flood colour, exactly like the planner's OpenCV window.";
+  if (!e.target.checked) { S.picks = []; draw(); }
+});
+$("clearPts").addEventListener("click", () => { S.picks = []; draw(); });
+cv.addEventListener("click", e => {
+  if (!$("pick").checked) return;
+  const r = cv.getBoundingClientRect();
+  S.picks.push([Math.round((e.clientX - r.left) / S.scale), Math.round((e.clientY - r.top) / S.scale)]);
+  draw();
+});
+
+/* ============================== live planner run ============================== */
+const STEP_HINTS = [[/Dynamic HSV|Auto flood sample|MASK SANITY|Mask created/, 1], [/Predicting flood spread/, 2],
+  [/Base candidates|BASE SELECTION|ASSIGNMENT TABLE/, 3], [/D\* LITE ROUTING|ROUTED SORTIE|ROUTE REFINEMENT/, 4],
+  [/PATH OVERLAP|WAYPOINT VALIDATION|MISSION COVERAGE/, 5]];
+function con(line, kind) {
+  const el = document.createElement("div"); el.className = kind;
+  if (/BASE SELECTION|MISSION COVERAGE|PATH OVERLAP CHECK/.test(line)) el.className = "hit";
+  el.textContent = line; $("console").appendChild(el); $("console").scrollTop = 1e9;
+}
+async function checkServer() {
+  let h = null;
+  try { const r = await fetch("api/health", { cache: "no-store" }); S.server = r.ok; h = await r.json(); } catch { S.server = false; }
+  $("btnRun").disabled = !S.server;
+  $("runNote").textContent = S.server ? "runs adapt_core/main.py on this machine" : "start demo/server.py to run the planner live";
+  if (h && h.planner_ready === false) {      // server is up but its Python lacks OpenCV etc.
+    $("runNote").textContent = "planner packages missing - see console";
+    con("Live planning needs the planner's Python packages: " + h.problem, "err");
+    con("Fix: " + h.fix + ", then restart the server.", "warn");
+  }
+}
+$("btnRun").addEventListener("click", () => {
+  if (!S.server) return;
+  resetSim(); Object.keys(S.reveal).forEach(k => S.reveal[k] = 0); setSteps(1);
+  $("console").innerHTML = ""; $("btnRun").disabled = true; $("runNote").textContent = "planner running (about a minute)…";
+  $("fleet").innerHTML = '<div class="callout">Waiting for the planner: drones are assigned once bases are chosen.</div>';
+  $("log").innerHTML = "";
+  const q = new URLSearchParams({ city: S.city, weather: $("weather").value, max_bases: $("nb").value });
+  if ($("pick").checked && S.picks.length) q.set("points", S.picks.map(p => p.join(",")).join(";"));
+  const es = new EventSource("api/plan?" + q);
+  let step = 1;
+  es.addEventListener("log", ev => {
+    const { line, kind } = JSON.parse(ev.data); con(line, kind);
+    for (const [re, n] of STEP_HINTS) if (re.test(line) && n > step) { step = n; setSteps(n); }
+  });
+  es.addEventListener("done", async ev => {
+    es.close(); const { url, seconds, stats } = JSON.parse(ev.data);
+    con(`✓ planned ${stats.bases} drones, ${stats.visited}/${stats.drop_points} drops, ${stats.crossings} crossings in ${seconds} s`, "hit");
+    const data = await (await fetch(url, { cache: "no-store" })).json();
+    await useDataset(data, "live/", `live run ${data.session}`);
+    Object.keys(S.reveal).forEach(k => S.reveal[k] = 0);
+    $("btnRun").disabled = false; $("runNote").textContent = `done in ${seconds} s`;
+    await revealSequence();
+    $("btnPlay").click();
+  });
+  es.addEventListener("fail", ev => {
+    es.close(); const { message } = JSON.parse(ev.data); con("✗ " + message, "err");
+    Object.keys(S.reveal).forEach(k => S.reveal[k] = 1); setSteps(0);
+    $("btnRun").disabled = false; $("runNote").textContent = message;
+  });
+  es.onerror = () => { if (es.readyState === 2) return; es.close(); $("btnRun").disabled = false; $("runNote").textContent = "connection lost"; };
+});
+
+/* ============================== boot ============================== */
+// ?city=kanpur&t=600 opens a city frozen at that mission time (used for report screenshots)
+const QS = new URLSearchParams(location.search);
+selectCity(QS.get("city") === "kanpur" ? "kanpur" : "varanasi").then(() => {
+  resize();
+  if (QS.has("t")) { S.t = Math.min(+QS.get("t") || 0, S.missionEnd); setSteps(6); updatePanel(); }
+});
+checkServer();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

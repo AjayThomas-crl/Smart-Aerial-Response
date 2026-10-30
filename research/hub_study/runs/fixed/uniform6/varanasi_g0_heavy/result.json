@@ -1,0 +1,65 @@
+{
+ "city": "varanasi",
+ "grow": 0,
+ "weather": {
+  "precipitation": 10.0,
+  "wind_speed_10m": 30.0,
+  "wind_direction_10m": 270.0
+ },
+ "max_bases": 6,
+ "mode": "fixed",
+ "exit_code": 0,
+ "wall_s": 31.801860094070435,
+ "mask_coverage": 0.09522459893048128,
+ "hubs_given": 6,
+ "hubs_available": 6,
+ "hubs_flooded": [],
+ "drop_points": 29,
+ "visited": 17,
+ "bases": [
+  [
+   198,
+   378
+  ],
+  [
+   642,
+   558
+  ],
+  [
+   186,
+   114
+  ],
+  [
+   594,
+   150
+  ]
+ ],
+ "sorties": 8,
+ "deliveries_s": [
+  187.12825736636057,
+  188.5675873730405,
+  195.14680741502957,
+  204.23586074010274,
+  337.8955994719082,
+  358.9558292153028,
+  391.5127394902399,
+  438.8955994719082,
+  871.8538934393908,
+  928.4845690931355,
+  933.1425268478329,
+  1029.4845690931356,
+  1079.9212511555206,
+  1150.383237132681,
+  1264.9763716919615,
+  1405.8355963513122,
+  1637.3830316643443
+ ],
+ "makespan_s": 1833.0875601113808,
+ "unreachable": 12,
+ "max_battery": 0.7302025178265822,
+ "crossings": 0,
+ "outcome": "MULTI_BASE_4",
+ "selection_coverable": 17,
+ "best_single_reach": 11,
+ "session": "/home/ajay/Projects/Smart-Aerial-Response/research/hub_study/runs/fixed/uniform6/varanasi_g0_heavy/session_20261028_150816"
+}

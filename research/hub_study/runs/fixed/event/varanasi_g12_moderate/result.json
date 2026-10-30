@@ -1,0 +1,56 @@
+{
+ "city": "varanasi",
+ "grow": 12,
+ "weather": {
+  "precipitation": 3.0,
+  "wind_speed_10m": 12.0,
+  "wind_direction_10m": 270.0
+ },
+ "max_bases": 5,
+ "mode": "fixed",
+ "exit_code": 0,
+ "wall_s": 39.29078388214111,
+ "mask_coverage": 0.27980570409982175,
+ "hubs_given": 5,
+ "hubs_available": 1,
+ "hubs_flooded": [
+  [
+   666,
+   114
+  ],
+  [
+   522,
+   210
+  ],
+  [
+   270,
+   210
+  ],
+  [
+   558,
+   546
+  ]
+ ],
+ "drop_points": 29,
+ "visited": 3,
+ "bases": [
+  [
+   354,
+   390
+  ]
+ ],
+ "sorties": 3,
+ "deliveries_s": [
+  224.04866006571473,
+  795.3761064703723,
+  1400.14649999569
+ ],
+ "makespan_s": 1596.6381071820645,
+ "unreachable": 25,
+ "max_battery": 0.7667847923678272,
+ "crossings": 0,
+ "outcome": "SINGLE_BASE",
+ "selection_coverable": 4,
+ "best_single_reach": 4,
+ "session": "/home/ajay/Projects/Smart-Aerial-Response/research/hub_study/runs/fixed/event/varanasi_g12_moderate/session_20261028_151448"
+}

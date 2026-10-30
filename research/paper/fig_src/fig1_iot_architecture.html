@@ -1,0 +1,55 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>IoT architecture</title>
+<style>
+/* Paper Fig. 1: five-layer IoT architecture for dock-based flood relief, laid out for one IEEE column.
+   Print style: white ground, dark grey ink, one teal accent for the decision path; readable in greyscale. */
+*{box-sizing:border-box}
+body{margin:0;width:640px;background:#fff;font-family:"Liberation Sans",Arial,sans-serif;color:#1d1d1d;padding:10px 8px 8px}
+.layer{border-left:4px solid #1d1d1d;padding:0 0 0 9px;margin-bottom:4px}
+.lab{font-size:17px;font-weight:bold;margin-bottom:4px}
+.lab span{font-weight:normal;color:#555;font-size:15px}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.c{border:1.5px solid #444;border-radius:5px;padding:4px 6px;font-size:14.5px;line-height:1.22;background:#fff}
+.c b{display:block;font-size:15.5px}
+.c i{font-style:normal;color:#555}
+.w2{grid-column:span 2}.w3{grid-column:span 3}
+.acc{border-color:#0b7a75;background:#e8f4f3}
+.dash{border-style:dashed}
+.arrow{text-align:center;font-size:15px;color:#444;line-height:15px;margin:1px 0 3px}
+.note{margin-top:6px;font-size:14px;color:#444;line-height:1.25}
+</style></head><body>
+<div class="layer"><div class="lab">Perception <span>· sensing devices</span></div><div class="cells">
+  <div class="c"><b>River-level gauges</b><i>ultrasonic / radar stage</i></div>
+  <div class="c"><b>Rain gauges</b><i>tipping bucket, per ward</i></div>
+  <div class="c"><b>Satellite flood maps</b><i>SAR extent (Sentinel-1)</i></div>
+  <div class="c acc w2"><b>Drone docks</b><i>water sensor, wind and rain, battery and kit count</i></div>
+  <div class="c acc"><b>Relief drones</b><i>GNSS, battery, payload</i></div>
+</div></div>
+<div class="arrow">▼ ▲</div>
+<div class="layer"><div class="lab">Network <span>· transport</span></div><div class="cells">
+  <div class="c"><b>LoRaWAN</b><i>gauges, 12 B per 5 min</i></div>
+  <div class="c"><b>HTTPS</b><i>weather API, satellite tiles</i></div>
+  <div class="c"><b>4G / 5G + MQTT</b><i>docks, drones: 1 Hz JSON</i></div>
+</div></div>
+<div class="arrow">▼</div>
+<div class="layer"><div class="lab">Middleware <span>· edge / cloud</span></div><div class="cells">
+  <div class="c"><b>MQTT broker</b><i>sar/&lt;city&gt;/drone|dock|gauge</i></div>
+  <div class="c"><b>Time-series store</b><i>levels, rain, telemetry</i></div>
+  <div class="c"><b>City digital twin</b><i>flood extent, dock states</i></div>
+  <div class="c acc w3"><b>Trigger engine</b><i>gauge level or rate over threshold, new flood map, or weather change → re-plan</i></div>
+</div></div>
+<div class="arrow">▼</div>
+<div class="layer"><div class="lab">Decision <span>· analytics</span></div><div class="cells">
+  <div class="c acc w3"><b>Swarm planner service (A.D.A.P.T. core)</b><i>bases limited to docks that are dry now; drop points, sorties, D* Lite routes, crossing check; one mission per drone</i></div>
+  <div class="c acc w2"><b>Dock siting study (offline)</b><i>flood stage × weather scenarios → robust dock set</i></div>
+  <div class="c"><b>Safety gate</b><i>battery, geofence, operator</i></div>
+</div></div>
+<div class="arrow">▼</div>
+<div class="layer"><div class="lab">Application <span>· city services</span></div><div class="cells">
+  <div class="c"><b>ICCC dashboard</b><i>swarm, docks, gauges</i></div>
+  <div class="c"><b>Mission dispatch</b><i>WPL missions to drones</i></div>
+  <div class="c"><b>Responder hand-off</b><i>unreached points to boats</i></div>
+  <div class="c dash w3"><b>Public alerts</b><i>ward-level messages (considered, not built)</i></div>
+</div></div>
+<div class="note">Teal: the loop from a sensor trigger to dispatched drone missions. Dashed: not built.</div>
+</body></html>

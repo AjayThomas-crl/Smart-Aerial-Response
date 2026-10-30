@@ -1,0 +1,81 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Swarm planning pipeline</title>
+<style>
+/* Diagram 2: what happens inside the planner, as three stage bands. Row 1 runs left to right, row 2
+   carries the swarm logic, row 3 is per-drone and export. Rendered to PNG at 1600x900 @2x. */
+:root{--navy:#0e2a47;--blue:#1f6fb2;--blue-soft:#e3eef8;--amber:#e09a00;--amber-soft:#fdf1d6;--green:#2f8f5b;--green-soft:#e2f3e9;--ink:#13202c;--muted:#56657a;--rule:#c9d4df}
+*{box-sizing:border-box}
+body{margin:0;width:1600px;height:670px;background:#fff;font-family:"Liberation Sans",Arial,sans-serif;color:var(--ink);padding:34px 40px;position:relative}
+h1{margin:0;font-size:30px;color:var(--navy)}
+.sub{font-size:17px;color:var(--muted);margin:6px 0 18px}
+.band{border-radius:16px;padding:12px 16px 16px;margin-bottom:16px;position:relative}
+.band h2{margin:0 0 10px;font-size:15px;letter-spacing:.12em;text-transform:uppercase}
+.b1{background:var(--blue-soft)} .b1 h2{color:var(--blue)}
+.b2{background:var(--amber-soft)} .b2 h2{color:#8a5a00}
+.b3{background:var(--green-soft)} .b3 h2{color:var(--green)}
+.row{display:flex;align-items:stretch;gap:0}
+.box{flex:1;background:#fff;border:1.5px solid var(--rule);border-radius:10px;padding:9px 11px;font-size:14.5px;line-height:1.3;position:relative}
+.box b{display:block;font-size:16px;margin-bottom:3px}
+.box span{color:var(--muted)}
+.box em{position:absolute;top:-11px;left:10px;font-style:normal;background:var(--navy);color:#fff;font-size:12.5px;font-weight:700;border-radius:999px;padding:1px 8px}
+.box.key{border:2.5px solid var(--navy)}
+.ar{width:34px;flex:none;display:flex;align-items:center;justify-content:center}
+.ar svg{width:30px;height:24px}
+.down{position:absolute;right:60px;bottom:-26px;z-index:2}
+.down.l{right:auto;left:60px}
+.down svg{width:28px;height:36px}
+.io{display:flex;gap:10px;margin-top:2px}
+.io div{font-size:14.5px;color:var(--muted)}
+.foot{font-size:14.5px;color:var(--muted);margin-top:4px}
+</style></head>
+<body>
+<h1>Architecture 2 · Inside the swarm planner</h1>
+<div class="sub">From one flood map and the weather to one validated mission per drone; numbered as in the demo's step strip</div>
+
+<div class="band b1"><h2>Perception and forecast (shared by all drones)</h2>
+<div class="row">
+  <div class="box"><em>input</em><b>Flood map + weather</b><span>Map image, rain mm, wind km/h and direction, lat/lon</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>1</em><b>Flood mask M</b><span>Resize to 750 px, HSV sampling, 5×5 close/open</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>1</em><b>Flood zones</b><span>Contours ≥ 200 px², convex hulls, centroids</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>2</em><b>Spread forecast M̂</b><span>Dilate 1 px per 5 mm/h, shift 1 px per 10 km/h downwind, 2 h</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box key"><em>2</em><b>No-fly field O = M ∪ M̂</b><span>Drones and bases must stay out of it</span></div>
+</div>
+<div class="down"><svg viewBox="0 0 28 36"><path d="M14 2V26" stroke="#0e2a47" stroke-width="3"/><path d="M5 21L14 34L23 21z" fill="#0e2a47"/></svg></div>
+</div>
+
+<div class="band b2"><h2>Swarm planning (who flies where)</h2>
+<div class="row" style="flex-direction:row-reverse">
+  <div class="box"><em>3</em><b>Drop points</b><span>On the dry edge of each zone; 1 to 4 per zone by area, ≥ 50 px apart</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24" style="transform:scaleX(-1)"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>3</em><b>Candidate bases</b><span>~60×60 grid of dry points with flood clearance</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24" style="transform:scaleX(-1)"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>3</em><b>Routed reach</b><span>Distance around flood on the D* Lite grid; battery model with payload + headwind</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24" style="transform:scaleX(-1)"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box key"><em>3</em><b>Greedy base selection</b><span>Fewest bases (≤ K = 6, ≥ 150 px apart) that cover every reachable drop</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24" style="transform:scaleX(-1)"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>3</em><b>Territories</b><span>Each drop to its nearest feasible base; unreachable drops flagged for boat teams</span></div>
+</div>
+<div class="down l"><svg viewBox="0 0 28 36"><path d="M14 2V26" stroke="#0e2a47" stroke-width="3"/><path d="M5 21L14 34L23 21z" fill="#0e2a47"/></svg></div>
+</div>
+
+<div class="band b3"><h2>Per drone, then airspace check and export</h2>
+<div class="row">
+  <div class="box"><em>4</em><b>Visit order</b><span>Nearest-neighbour tour from the base</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>4</em><b>Sorties</b><span>Split so payload ≤ 8 kg and battery ≤ 80%; reload at base</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box key"><em>4</em><b>D* Lite per leg</b><span>Time-aware: avoids the flood expected at arrival; refine until stable (≤ 6 rounds)</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>5</em><b>Deconfliction</b><span>Any two drones' routes crossing → reassign or move base (≤ 5 rounds) or refuse</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>5</em><b>Export + validate</b><span>Pixel → WGS84, one QGC WPL 110 file per drone, route map, run summary</span></div>
+  <div class="ar"><svg viewBox="0 0 30 24"><path d="M2 12H22" stroke="#0e2a47" stroke-width="3"/><path d="M18 4L28 12L18 20z" fill="#0e2a47"/></svg></div>
+  <div class="box"><em>6</em><b>Fly the swarm</b><span>Ground control / SITL, or the live command-centre replay</span></div>
+</div>
+</div>
+<div class="foot">Battery model: Garuda Agri Kisan class drone, 5 m/s, 7 min loaded endurance, 0.25 kg per relief kit, 20% reserve, +8% time per kg payload, +2.5% per m/s headwind.</div>
+</body></html>

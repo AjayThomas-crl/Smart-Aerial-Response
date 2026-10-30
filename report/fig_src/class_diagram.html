@@ -1,0 +1,105 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Class and module diagram</title><link rel="stylesheet" href="common.css">
+<style>
+/* UML class / module diagram of the implemented code. Boxes flow in three columns; connectors are drawn
+   from the laid-out box positions by the script at the end. */
+.wrap{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 46px;padding:4px 2px 6px}
+.col{display:flex;flex-direction:column;gap:22px}
+.k{border:2px solid #444;border-radius:4px;background:#fff;font-size:13.5px;line-height:1.32}
+.k .n{text-align:center;font-weight:bold;font-size:15.5px;padding:4px 6px 3px;border-bottom:1.6px solid #444}
+.k .n small{display:block;font-weight:normal;font-size:12.5px;color:#555}
+.k .a,.k .m{padding:4px 8px;font-family:"Liberation Mono",monospace;font-size:12.5px}
+.k .a{border-bottom:1.6px solid #444;color:#333}
+.k.acc{border-color:#0b7a75}.k.acc .n{background:#e8f4f3;border-color:#0b7a75}
+.k.acc .a{border-color:#0b7a75}
+.pk{font-size:12.5px;color:#0b7a75;font-weight:bold;margin:0 0 -16px 2px}
+svg{position:absolute;left:0;top:0;pointer-events:none}
+.lk{stroke:#444;stroke-width:1.5;fill:none}
+.dep{stroke:#444;stroke-width:1.4;stroke-dasharray:6 4;fill:none}
+.ll{font-size:12px;fill:#0b7a75;paint-order:stroke;stroke:#fff;stroke-width:5px}
+.legend{font-size:13px;color:#444;margin-top:6px}
+</style></head><body>
+<div class="wrap" id="w">
+ <div class="col">
+  <div class="pk">adapt_core/src (planner)</div>
+  <div class="k" id="ip"><div class="n">ImageProcessor<small>vision.image_processing</small></div>
+   <div class="a">sample_points<br>hsv_lower, hsv_upper<br>is_red_wrap</div>
+   <div class="m">auto_sample_points(image)<br>compute_dynamic_hsv()<br>mask_flood_areas(image)<br>find_filtered_contours(mask)</div></div>
+  <div class="k" id="fs"><div class="n">«module» flood_spread<small>weather.flood_spread</small></div>
+   <div class="a">ForecastDict(dict)</div>
+   <div class="m">predict_spread(mask, weather,<br>&nbsp;&nbsp;horizon_hours) → ForecastDict</div></div>
+  <div class="k" id="mb"><div class="n">«module» multi_base<small>mission.multi_base</small></div>
+   <div class="m">select_bases(candidates, drops,<br>&nbsp;&nbsp;distance_fn, obstacle_mask, …,<br>&nbsp;&nbsp;max_bases, min_separation_px)<br>single_drop_reach(…)</div></div>
+  <div class="k" id="pr"><div class="n">PlannedRoute «dataclass»<small>mission.constraints</small></div>
+   <div class="a">points, drop_indices<br>reload_indices, unreachable<br>remaining_battery, sortie_battery</div>
+   <div class="m">plan_mission_stops(home, drops,<br>&nbsp;&nbsp;forecasts, mask, …) → PlannedRoute<br>leg_battery_fraction(m, kg, wind)</div></div>
+ </div>
+ <div class="col">
+  <div class="pk">&nbsp;</div>
+  <div class="k acc" id="mn"><div class="n">«script» main.py<small>adapt_core entry point</small></div>
+   <div class="m">--mode multi --no-gui --max-bases<br>segment map → spread forecast<br>→ run_multi_base(…)</div></div>
+  <div class="k" id="rmb"><div class="n">«module» multi_base_planner<small>pipeline.multi_base_planner</small></div>
+   <div class="m">run_multi_base(image, mask,<br>&nbsp;&nbsp;forecasts, contours, …, weather,<br>&nbsp;&nbsp;max_bases, session_root)</div></div>
+  <div class="k" id="pf"><div class="n">«module» pathfinding<small>routing.pathfinding</small></div>
+   <div class="m">build_routing_grid(mask, factor)<br>compute_full_path(points, mask, …)<br>nearest_neighbor_tsp(points, home)<br>polyline_intersections(a, b)</div></div>
+  <div class="k" id="ds"><div class="n">DStarLite<small>routing.dstarlite</small></div>
+   <div class="a">rows, cols, start, goal, km<br>g, rhs, U, obstacles</div>
+   <div class="m">calculate_key(u)<br>update_vertex(u)<br>compute_shortest_path()<br>plan_path(obstacles)</div></div>
+  <div class="k" id="mo"><div class="n">«module» mission_output<small>mission.mission_output</small></div>
+   <div class="m">generate_mission_file(path, drops,<br>&nbsp;&nbsp;home, …) → QGC WPL 110<br>validate_waypoints_file(file)<br>display_multi_base_map(…)</div></div>
+ </div>
+ <div class="col">
+  <div class="pk">demo/ and iot/</div>
+  <div class="k" id="h"><div class="n">Handler<small>demo/server.py · SimpleHTTPRequestHandler</small></div>
+   <div class="m">do_GET(): /api/health, /api/plan<br>plan(q) · sse(event, data)<br>run_planner(city, weather,<br>&nbsp;&nbsp;max_bases, points)<br>&nbsp;&nbsp;→ subprocess main.py</div></div>
+  <div class="k" id="ex"><div class="n">«module» export_session<small>demo/export_session.py</small></div>
+   <div class="m">build(session_dir, city, out_dir,<br>&nbsp;&nbsp;points, horizon, tag)<br>flood_layers(…) · rgba_layer(…)</div></div>
+  <div class="k acc" id="te"><div class="n">TriggerEngine<small>iot/smartcity_iot.py</small></div>
+   <div class="a">city, weather, n_docks<br>levels, docks, stage<br>pending, busy, plans</div>
+   <div class="m">on_message(cl, userdata, msg)<br>dry_docks() → dock sites<br>worker()<br>replan(job) → run_scenario.py</div></div>
+  <div class="k" id="wd"><div class="n">World «dataclass»<small>iot/smartcity_iot.py</small></div>
+   <div class="a">city, weather, start_m<br>rise_cm_h, hours_per_s</div>
+   <div class="m">hours() · level(offset) · stage()<br>run_gauges(…) · run_docks(…)<br>lorawan_bridge(port, city)</div></div>
+ </div>
+ <svg id="s"></svg>
+</div>
+<div class="legend">Solid arrow: calls / uses &nbsp;·&nbsp; dashed arrow: runs as a subprocess or talks over MQTT &nbsp;·&nbsp; filled diamond: composition &nbsp;·&nbsp; teal: entry points of the swarm planner and the IoT loop</div>
+<script>
+// connectors: [from, to, kind, label, fromSide, toSide]; sides are l, r, t, b
+const L = [
+  ["mn", "ip", "lk", "", "l", "r"], ["mn", "fs", "lk", "", "l", "r"], ["mn", "rmb", "lk", "", "b", "t"],
+  ["rmb", "mb", "lk", "", "l", "r"], ["rmb", "pr", "lk", "", "l", "r"], ["rmb", "pf", "lk", "", "b", "t"],
+  ["pf", "ds", "comp", "", "b", "t"], ["rmb", "mo", "lk", "", "l", "l"],
+  ["h", "mn", "dep", "", "l", "r"], ["h", "ex", "dep", "", "b", "t"],
+  ["te", "mn", "dep", "", "l", "r"], ["wd", "te", "dep", "MQTT", "t", "b"],
+];
+const W = document.getElementById("w").getBoundingClientRect();
+const s = document.getElementById("s");
+s.setAttribute("width", W.width); s.setAttribute("height", W.height);
+s.innerHTML = '<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#444"/></marker>' +
+  '<marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10" fill="none" stroke="#444" stroke-width="1.5"/></marker>' +
+  '<marker id="d" viewBox="0 0 16 10" refX="1" refY="5" markerWidth="14" markerHeight="9" orient="auto"><path d="M1 5L8 1L15 5L8 9z" fill="#444"/></marker></defs>';
+const used = {};
+function pt(id, side) {
+  const r = document.getElementById(id).getBoundingClientRect();
+  const k = id + side, n = used[k] = (used[k] || 0) + 1;
+  const off = (n - 1) * 14;
+  const x = { l: r.left, r: r.right, t: r.left + r.width / 2 + off, b: r.left + r.width / 2 + off }[side] - W.left;
+  const y = { l: r.top + 24 + off, r: r.top + 24 + off, t: r.top, b: r.bottom }[side] - W.top;
+  return [x, y];
+}
+let html = "";
+for (const [a, b, kind, lab, fa, tb] of L) {
+  const [x1, y1] = pt(a, fa), [x2, y2] = pt(b, tb);
+  let d;
+  if (fa === "l" && tb === "l") d = `M${x1} ${y1} H${x1 - 22} V${y2} H${x2}`;
+  else if ((fa === "l" && tb === "r") || (fa === "r" && tb === "l")) { const mx = (x1 + x2) / 2; d = `M${x1} ${y1} H${mx} V${y2} H${x2}`; }
+  else d = `M${x1} ${y1} L${x2} ${y2}`;
+  const cls = kind === "comp" ? "lk" : kind;
+  const mk = kind === "comp" ? 'marker-start="url(#d)"' : kind === "dep" ? 'marker-end="url(#o)"' : 'marker-end="url(#a)"';
+  html += `<path class="${cls}" d="${d}" ${mk}/>`;
+  if (lab) html += `<text class="ll" x="${x1 + 8}" y="${(y1 + y2) / 2 + 4}">${lab}</text>`;
+}
+s.innerHTML += html;
+</script>
+</body></html>

@@ -1,0 +1,183 @@
+{
+ "date": "2026-10-30",
+ "n": 6,
+ "results": {
+  "IEEE research paper": {
+   "words": 4197,
+   "against": {
+    "A.D.A.P.T. journal manuscript (under review)": {
+     "percent": 0.79,
+     "shared": 33,
+     "grams": 4192,
+     "passages": [
+      {
+       "words": 36,
+       "text": "school of computer science and engineering school of computer science and engineering school of computer science and engineering vellore institute of technology vellore institute of technology vellore institute of technology vellore india vellore india vellore india"
+      },
+      {
+       "words": 7,
+       "text": "the school of computer science and engineering"
+      }
+     ]
+    },
+    "Earlier course report (deliverables/)": {
+     "percent": 0.1,
+     "shared": 4,
+     "grams": 4192,
+     "passages": [
+      {
+       "words": 8,
+       "text": "runs an integrated command and control centre iccc"
+      },
+      {
+       "words": 6,
+       "text": "food water and medicine to people"
+      }
+     ]
+    },
+    "Course project report": {
+     "percent": 2.62,
+     "shared": 110,
+     "grams": 4192,
+     "passages": [
+      {
+       "words": 18,
+       "text": "flood resilient siting of iot drone docks for smart city relief a scenario study of varanasi and kanpur"
+      },
+      {
+       "words": 13,
+       "text": "the share of training scenarios in which c is dry and clear of"
+      },
+      {
+       "words": 12,
+       "text": "iccc plan 209 1 1800 s 1 0 00 total 9 61"
+      },
+      {
+       "words": 10,
+       "text": "against 49 and 45 for docks sited from a single"
+      },
+      {
+       "words": 10,
+       "text": "and the maximal covering location problem of church and revelle"
+      },
+      {
+       "words": 10,
+       "text": "is the open source a d a p t system"
+      },
+      {
+       "words": 9,
+       "text": "share of drop points served as the flood rises"
+      },
+      {
+       "words": 9,
+       "text": "share of drop points served as the flood rises"
+      }
+     ]
+    }
+   }
+  },
+  "Course project report": {
+   "words": 7784,
+   "against": {
+    "A.D.A.P.T. journal manuscript (under review)": {
+     "percent": 0.08,
+     "shared": 6,
+     "grams": 7779,
+     "passages": [
+      {
+       "words": 8,
+       "text": "grade 1 school of computer science and engineering"
+      },
+      {
+       "words": 7,
+       "text": "the school of computer science and engineering"
+      },
+      {
+       "words": 6,
+       "text": "school of computer science and engineering"
+      }
+     ]
+    },
+    "Earlier course report (deliverables/)": {
+     "percent": 0.64,
+     "shared": 50,
+     "grams": 7779,
+     "passages": [
+      {
+       "words": 15,
+       "text": "smart aerial response an autonomous uav framework for resilient flood emergency management in smart cities"
+      },
+      {
+       "words": 15,
+       "text": "smart aerial response an autonomous uav framework for resilient flood emergency management in smart cities"
+      },
+      {
+       "words": 15,
+       "text": "smart aerial response an autonomous uav framework for resilient flood emergency management in smart cities"
+      },
+      {
+       "words": 9,
+       "text": "abstract floods are the most frequent disaster in indian"
+      },
+      {
+       "words": 9,
+       "text": "all drones at once on the flood map with"
+      },
+      {
+       "words": 8,
+       "text": "city s integrated command and control centre iccc"
+      },
+      {
+       "words": 8,
+       "text": "for a whole city in about a minute"
+      },
+      {
+       "words": 8,
+       "text": "runs the real planner and replays the swarm"
+      }
+     ]
+    },
+    "IEEE research paper": {
+     "percent": 1.68,
+     "shared": 131,
+     "grams": 7779,
+     "passages": [
+      {
+       "words": 18,
+       "text": "flood resilient siting of iot drone docks for smart city relief a scenario study of varanasi and kanpur"
+      },
+      {
+       "words": 13,
+       "text": "the share of training scenarios in which c is dry and clear of"
+      },
+      {
+       "words": 12,
+       "text": "iccc plan 209 1 1800 s 1 0 00 total 9 61"
+      },
+      {
+       "words": 10,
+       "text": "against 49 and 45 for docks sited from a single"
+      },
+      {
+       "words": 10,
+       "text": "and the maximal covering location problem of church and revelle"
+      },
+      {
+       "words": 10,
+       "text": "is the open source a d a p t system"
+      },
+      {
+       "words": 9,
+       "text": "share of drop points served as the flood rises"
+      },
+      {
+       "words": 9,
+       "text": "27 s for varanasi and 54 s for kanpur"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "skipped": {}
+}

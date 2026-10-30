@@ -1,0 +1,59 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Use case diagram</title><link rel="stylesheet" href="common.css">
+<style>
+/* UML use case diagram: people on the left, devices (system actors) on the right. */
+.uc{fill:#fff;stroke:#444;stroke-width:2}
+.ucA{fill:#e8f4f3;stroke:#0b7a75;stroke-width:2.2}
+.t{font-size:16px;text-anchor:middle}
+.act{stroke:#1d1d1d;stroke-width:2.2;fill:none}
+.an{font-size:16px;font-weight:bold;text-anchor:middle}
+.as{font-size:14px;fill:#555;text-anchor:middle}
+.l{stroke:#555;stroke-width:1.5}
+.inc{stroke:#0b7a75;stroke-width:1.6;stroke-dasharray:6 4;fill:none;marker-end:url(#o)}
+.st{font-size:13.5px;fill:#0b7a75;paint-order:stroke;stroke:#fff;stroke-width:5px}
+</style></head><body>
+<svg width="1064" height="700" viewBox="0 0 1064 700">
+<defs><marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10" fill="none" stroke="#0b7a75" stroke-width="1.6"/></marker>
+<g id="actor"><circle cx="0" cy="-46" r="13" class="act"/><line x1="0" y1="-33" x2="0" y2="4" class="act"/><line x1="-22" y1="-20" x2="22" y2="-20" class="act"/><line x1="0" y1="4" x2="-17" y2="34" class="act"/><line x1="0" y1="4" x2="17" y2="34" class="act"/></g></defs>
+
+<rect x="250" y="14" width="566" height="672" rx="6" fill="none" stroke="#1d1d1d" stroke-width="2"/>
+<text x="268" y="40" font-size="17" font-weight="bold">Smart Aerial Response system</text>
+
+<!-- people -->
+<use href="#actor" x="110" y="250"/><text class="an" x="110" y="310">ICCC operator</text>
+<use href="#actor" x="110" y="470"/><text class="an" x="110" y="530">Responder team</text><text class="as" x="110" y="548">NDRF, boats</text>
+<use href="#actor" x="110" y="630"/><text class="an" x="110" y="690" style="font-size:15px">Disaster manager</text>
+<!-- system actors -->
+<use href="#actor" x="960" y="170"/><text class="an" x="960" y="230">Sensor network</text><text class="as" x="960" y="248">«system» gauges</text>
+<use href="#actor" x="960" y="470"/><text class="an" x="960" y="530">Drone / dock</text><text class="as" x="960" y="548">«system»</text>
+
+<!-- use cases, operator column -->
+<ellipse class="uc" cx="390" cy="90" rx="124" ry="32"/><text class="t" x="390" y="96">Monitor river levels</text>
+<ellipse class="uc" cx="390" cy="185" rx="124" ry="32"/><text class="t" x="390" y="191">Review &amp; approve missions</text>
+<ellipse class="uc" cx="390" cy="280" rx="124" ry="32"/><text class="t" x="390" y="286">Replay / inspect swarm</text>
+<ellipse class="uc" cx="390" cy="375" rx="124" ry="32"/><text class="t" x="390" y="381">View IoT data budget</text>
+<ellipse class="uc" cx="390" cy="470" rx="124" ry="32"/><text class="t" x="390" y="476">Hand off unreachable points</text>
+<ellipse class="uc" cx="390" cy="610" rx="124" ry="32"/><text class="t" x="390" y="616">Run dock-siting study</text>
+<!-- use cases, automated column -->
+<ellipse class="ucA" cx="684" cy="130" rx="114" ry="32"/><text class="t" x="684" y="136">Receive flood trigger</text>
+<ellipse class="ucA" cx="684" cy="270" rx="114" ry="32"/><text class="t" x="684" y="276">Plan swarm</text>
+<ellipse class="ucA" cx="684" cy="410" rx="114" ry="32"/><text class="t" x="684" y="416">Dispatch missions</text>
+<ellipse class="uc" cx="684" cy="540" rx="114" ry="32"/><text class="t" x="684" y="546">Report telemetry, dock status</text>
+
+<!-- associations -->
+<line class="l" x1="134" y1="218" x2="270" y2="100"/>
+<line class="l" x1="134" y1="225" x2="266" y2="187"/>
+<line class="l" x1="134" y1="232" x2="266" y2="278"/>
+<line class="l" x1="134" y1="240" x2="272" y2="366"/>
+<line class="l" x1="134" y1="452" x2="266" y2="468"/>
+<line class="l" x1="134" y1="610" x2="266" y2="610"/>
+<line class="l" x1="936" y1="140" x2="798" y2="131"/>
+<line class="l" x1="936" y1="440" x2="798" y2="414"/>
+<line class="l" x1="936" y1="452" x2="798" y2="536"/>
+
+<!-- include / extend -->
+<path class="inc" d="M684 162 L684 236"/><text class="st" x="692" y="205">«include»</text>
+<path class="inc" d="M585 388 L516 200"/><text class="st" x="472" y="333">«include»</text>
+<path class="inc" d="M514 466 Q556 390 606 296"/><text class="st" x="452" y="428">«extend»</text>
+</svg>
+</body></html>

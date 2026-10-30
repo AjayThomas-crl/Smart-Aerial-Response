@@ -1,0 +1,68 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>System architecture</title>
+<style>
+/* Diagram 1: the smart-city system. Four layers left to right (data -> intelligence -> execution ->
+   command centre) with the re-planning loop underneath. Rendered to PNG at 1600x900 @2x. */
+:root{--navy:#0e2a47;--blue:#1f6fb2;--blue-soft:#e3eef8;--amber:#e09a00;--amber-soft:#fdf1d6;--green:#2f8f5b;--green-soft:#e2f3e9;--ink:#13202c;--muted:#56657a;--rule:#c9d4df}
+*{box-sizing:border-box}
+body{margin:0;width:1600px;height:740px;background:#fff;font-family:"Liberation Sans",Arial,sans-serif;color:var(--ink);padding:34px 40px}
+h1{margin:0;font-size:30px;color:var(--navy)}
+.sub{font-size:17px;color:var(--muted);margin:6px 0 22px}
+.cols{display:grid;grid-template-columns:1fr 46px 1.35fr 46px 1fr 46px 1fr;align-items:stretch;height:480px}
+.layer{border:2px solid var(--rule);border-radius:16px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;background:#fbfcfd}
+.layer h2{margin:0;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.layer h3{margin:-4px 0 4px;font-size:21px;color:var(--navy)}
+.layer.core{border-color:var(--blue);background:var(--blue-soft)}
+.box{background:#fff;border:1.5px solid var(--rule);border-radius:10px;padding:9px 12px;font-size:15.5px;line-height:1.3}
+.box b{display:block;font-size:16.5px;margin-bottom:2px}
+.box span{color:var(--muted)}
+.core .box{border-color:#9cc0e2}
+.box.amber{border-color:var(--amber);background:var(--amber-soft)}
+.box.green{border-color:var(--green);background:var(--green-soft)}
+.swarm{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}
+.swarm i{font-style:normal;background:var(--navy);color:#fff;border-radius:7px;text-align:center;font-size:14px;padding:5px 0;font-weight:700}
+.arrow{display:flex;align-items:center;justify-content:center}
+.arrow svg{width:46px;height:40px}
+.loop{margin-top:18px;height:92px;border:2px dashed var(--amber);border-radius:16px;display:flex;align-items:center;gap:18px;padding:0 24px;background:var(--amber-soft)}
+.loop b{font-size:19px;color:#8a5a00;white-space:nowrap}
+.loop p{margin:0;font-size:16.5px;line-height:1.35}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.08em;color:#fff;background:var(--blue);border-radius:5px;padding:2px 7px;margin-left:6px;vertical-align:2px}
+</style></head>
+<body>
+<h1>Architecture 1 · Smart Aerial Response as a smart-city service</h1>
+<div class="sub">City data in, one coordinated drone mission per base out, run from the Integrated Command and Control Centre (ICCC)</div>
+<div class="cols">
+  <div class="layer">
+    <h2>Layer 1</h2><h3>City data sources</h3>
+    <div class="box"><b>Satellite flood maps</b><span>Sentinel-1 / Sentinel-2 flood extent (ESA), map image of the city</span></div>
+    <div class="box"><b>Live weather</b><span>Open-Meteo API: rainfall (mm), wind speed and direction</span></div>
+    <div class="box"><b>City GIS reference</b><span>Image-centre latitude/longitude, map scale or GeoTIFF</span></div>
+    <div class="box"><b>Operator input</b><span>A few clicks on flood pixels at the command centre</span></div>
+  </div>
+  <div class="arrow"><svg viewBox="0 0 46 40"><path d="M4 20H36" stroke="#0e2a47" stroke-width="4"/><path d="M30 9L43 20L30 31z" fill="#0e2a47"/></svg></div>
+  <div class="layer core">
+    <h2>Layer 2 · intelligence</h2><h3>Swarm planner <span class="tag">A.D.A.P.T. core</span></h3>
+    <div class="box"><b>Flood perception</b><span>HSV colour sampling, morphology, flood zones (contours)</span></div>
+    <div class="box"><b>Flood-spread forecast</b><span>Rain grows and wind shifts the flood over a 2 h horizon → no-fly obstacle field</span></div>
+    <div class="box"><b>Multi-base swarm planning</b><span>Dry base selection (≤ 6), drop-to-base territories, D* Lite routing, battery and payload sorties</span></div>
+    <div class="box"><b>Airspace deconfliction + validation</b><span>Route-crossing check and repair, battery re-check on routed path, mission file validator</span></div>
+  </div>
+  <div class="arrow"><svg viewBox="0 0 46 40"><path d="M4 20H36" stroke="#0e2a47" stroke-width="4"/><path d="M30 9L43 20L30 31z" fill="#0e2a47"/></svg></div>
+  <div class="layer">
+    <h2>Layer 3</h2><h3>Execution</h3>
+    <div class="box"><b>Mission files</b><span>One QGC WPL 110 file per drone (take-off, drops, servo release, RTL)</span></div>
+    <div class="box"><b>Ground control</b><span>QGroundControl / Mission Planner, ArduPilot SITL for testing</span></div>
+    <div class="box amber"><b>UAV swarm</b><span>One drone per base, own territory, routes never cross</span>
+      <div class="swarm"><i>D1</i><i>D2</i><i>D3</i><i>D4</i><i>D5</i><i>D6</i></div></div>
+  </div>
+  <div class="arrow"><svg viewBox="0 0 46 40"><path d="M4 20H36" stroke="#0e2a47" stroke-width="4"/><path d="M30 9L43 20L30 31z" fill="#0e2a47"/></svg></div>
+  <div class="layer">
+    <h2>Layer 4</h2><h3>City command centre</h3>
+    <div class="box"><b>Live swarm dashboard</b><span>Drone status, battery, kits delivered, mission clock</span></div>
+    <div class="box green"><b>Relief to citizens</b><span>Food, water, medicine kits dropped at the dry edge of each flood zone</span></div>
+    <div class="box"><b>Hand-off to ground teams</b><span>Unreachable points sent to NDRF / boat teams</span></div>
+    <div class="box"><b>SDG reporting</b><span>SDG 11.5, 13.1, 9.1, 3.d</span></div>
+  </div>
+</div>
+<div class="loop"><b>↻ Re-planning loop</b><p>New satellite pass or weather update → the planner is run again in about a minute → new bases, routes and mission files go out. The swarm is coordinated before each flight; drones do not need to talk to each other in the air.</p></div>
+</body></html>

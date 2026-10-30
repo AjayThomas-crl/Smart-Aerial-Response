@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Study design</title>
+<style>
+/* Paper Fig. 2: the dock-siting study as a top-to-bottom flow for one IEEE column, train / test split marked. */
+*{box-sizing:border-box}
+body{margin:0;width:640px;background:#fff;font-family:"Liberation Sans",Arial,sans-serif;color:#1d1d1d;padding:8px}
+.b{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:start;border:1.5px solid #444;border-radius:5px;padding:5px 8px;font-size:14.5px;line-height:1.25}
+.b .n{width:26px;height:26px;border-radius:50%;background:#1d1d1d;color:#fff;font-weight:bold;font-size:15px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.b b{font-size:16px}
+.b i{font-style:normal;color:#555}
+.acc{border-color:#0b7a75;background:#e8f4f3}
+.acc .n{background:#0b7a75}
+.ar{text-align:center;font-size:14px;color:#444;line-height:14px;margin:1px 0}
+.split span{display:inline-block;font-size:13.5px;border:1.2px solid #444;border-radius:4px;padding:0 6px;margin:3px 4px 0 0}
+.split .t{background:#1d1d1d;color:#fff}
+.foot{margin-top:6px;font-size:14px;color:#444;line-height:1.25}
+</style></head><body>
+<div class="b"><div class="n">1</div><div><b>Scenarios</b> <i>2 cities × 5 flood stages (mask grown 0, 3, 6, 9, 12 px) × 3 weathers (calm, moderate, heavy)</i>
+  <div class="split"><span class="t">train stages: 0, 6, 12</span><span>test stages: 3, 9</span></div></div></div>
+<div class="ar">▼</div>
+<div class="b"><div class="n">2</div><div><b>Adaptive plans</b> <i>planner places up to 6 bases freely in every scenario (30 runs)</i></div></div>
+<div class="ar">▼</div>
+<div class="b acc"><div class="n">3</div><div><b>Dock strategies</b> <i>robust (4, 6, 8 docks) from training plans; event-sited (one event); uniform (k-means)</i></div></div>
+<div class="ar">▼</div>
+<div class="b"><div class="n">4</div><div><b>Fixed-dock plans</b> <i>same 30 scenarios, bases restricted to docks that are dry and clear (150 runs)</i></div></div>
+<div class="ar">▼</div>
+<div class="b"><div class="n">5</div><div><b>Metrics</b> <i>coverage, docks lost, regret against adaptive, base displacement, 30-min service level, trigger-to-mission time</i></div></div>
+<div class="foot">Every run uses the unmodified planner with the same vehicle and battery settings; only the flood stage, weather and permitted base sites change.</div>
+</body></html>

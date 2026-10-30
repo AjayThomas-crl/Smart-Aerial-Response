@@ -1,0 +1,28 @@
+{
+  "guide": {
+    "name": "Dr. Swarnalatha P",
+    "designation": "Professor Grade 1",
+    "email": "pswarnalatha@vit.ac.in"
+  },
+  "students": [
+    {
+      "name": "Dharani I S",
+      "reg": "23BCT0222",
+      "email": "dharani.is2023@vitstudent.ac.in"
+    },
+    {
+      "name": "Sukant G",
+      "reg": "23BCT0184",
+      "email": "sukant.g2023@vitstudent.ac.in"
+    }
+  ],
+  "course": "Design of Smart Cities",
+  "semester": "Fall Semester 2026-27",
+  "programme": "B.Tech. Computer Science and Engineering with Specialization in Internet of Things",
+  "paper_extra_authors": [
+    {
+      "name": "Ajay Thomas K",
+      "email": "ajaythomas.k2023@vitstudent.ac.in"
+    }
+  ]
+}

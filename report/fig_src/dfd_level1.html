@@ -1,0 +1,88 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>DFD level 1</title><link rel="stylesheet" href="common.css">
+<style>
+/* Level-1 DFD: six processes, three data stores (open boxes), external entities at top and bottom. */
+.c{position:relative;width:1064px;height:716px}
+.c>div{position:absolute}
+.ent{border:2px solid #444;border-radius:3px;background:#fff;font-size:15px;font-weight:bold;text-align:center;
+     display:flex;align-items:center;justify-content:center;height:52px;width:150px;line-height:1.15}
+.p{width:310px;height:120px;border:2.2px solid #0b7a75;border-radius:12px;background:#e8f4f3;overflow:hidden}
+.p .h{background:#0b7a75;color:#fff;font-weight:bold;font-size:17px;padding:4px 10px}
+.p .t{padding:6px 10px;font-size:15.5px;line-height:1.28;color:#333}
+.s{width:270px;height:46px;border-top:2px solid #444;border-bottom:2px solid #444;display:flex;background:#fff}
+.s .id{width:46px;border-right:2px solid #444;font-weight:bold;font-size:16px;display:flex;align-items:center;justify-content:center}
+.s .n{padding:0 10px;font-size:15.5px;display:flex;align-items:center}
+svg{position:absolute;left:0;top:0}
+.f{stroke:#444;stroke-width:1.8;fill:none;marker-end:url(#a)}
+.lab{font-size:14px;fill:#333;paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+</style></head><body>
+<div class="c">
+  <div class="ent" style="left:20px;top:8px">River / rain gauges</div>
+  <div class="ent" style="left:180px;top:8px">Drone docks</div>
+  <div class="ent" style="left:734px;top:8px">Weather API</div>
+  <div class="ent" style="left:894px;top:8px">Satellite flood map</div>
+
+  <div class="p" style="left:20px;top:110px"><div class="h">1.0 Ingest &amp; decode</div><div class="t">LoRaWAN uplink codec (12-byte packets), MQTT broker topics sar/&lt;city&gt;/…</div></div>
+  <div class="p" style="left:734px;top:110px"><div class="h">2.0 Flood mapping</div><div class="t">HSV flood segmentation of the map; weather-driven spread forecast (2 h)</div></div>
+  <div class="p" style="left:20px;top:290px"><div class="h">3.0 Trigger engine</div><div class="t">gauge level → flood stage; collects docks reporting dry; starts re-plan</div></div>
+  <div class="p" style="left:734px;top:290px"><div class="h">4.0 Swarm planning</div><div class="t">bases from dry docks, drop points, payload sorties, D* Lite routes, crossing repair</div></div>
+  <div class="p" style="left:20px;top:470px"><div class="h">6.0 ICCC dashboard</div><div class="t">live swarm replay, plan log, operator approval, hand-off list</div></div>
+  <div class="p" style="left:734px;top:470px"><div class="h">5.0 Mission export &amp; dispatch</div><div class="t">QGC WPL 110 file per drone, validated, sent to its dock</div></div>
+
+  <div class="s" style="left:397px;top:160px"><div class="id">D1</div><div class="n">Time-series store</div></div>
+  <div class="s" style="left:397px;top:340px"><div class="id">D2</div><div class="n">Dock registry, robust set</div></div>
+  <div class="s" style="left:397px;top:520px"><div class="id">D3</div><div class="n">Session outputs, maps</div></div>
+
+  <div class="ent" style="left:95px;top:656px">ICCC operator</div>
+  <div class="ent" style="left:447px;top:656px;width:170px">Responders / NDRF</div>
+  <div class="ent" style="left:814px;top:656px">Relief drones</div>
+
+  <svg width="1064" height="716">
+    <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#444"/></marker></defs>
+    <!-- sources -->
+    <line class="f" x1="95" y1="60" x2="95" y2="108"/>
+    <text class="lab" x="102" y="90">uplinks</text>
+    <line class="f" x1="255" y1="60" x2="255" y2="108"/>
+    <text class="lab" x="262" y="90">status JSON</text>
+    <line class="f" x1="809" y1="60" x2="809" y2="108"/>
+    <text class="lab" x="816" y="90">rain, wind</text>
+    <line class="f" x1="969" y1="60" x2="969" y2="108"/>
+    <text class="lab" x="976" y="90">flood image</text>
+    <!-- row 1 -->
+    <line class="f" x1="330" y1="183" x2="395" y2="183"/>
+    <text class="lab" x="334" y="152">levels</text>
+    <!-- column A -->
+    <line class="f" x1="175" y1="230" x2="175" y2="288"/>
+    <text class="lab" x="183" y="264">gauge level, dock status</text>
+    <line class="f" x1="175" y1="410" x2="175" y2="468"/>
+    <text class="lab" x="183" y="444">plan summary (iccc/plan)</text>
+    <line class="f" x1="140" y1="590" x2="140" y2="654"/>
+    <text class="lab" x="40" y="628">live view</text>
+    <line class="f" x1="210" y1="654" x2="210" y2="592"/>
+    <text class="lab" x="218" y="628">approve</text>
+    <!-- row 2 -->
+    <line class="f" x1="330" y1="312" x2="732" y2="312"/>
+    <text class="lab" x="420" y="304">trigger: flood stage, dry docks</text>
+    <line class="f" x1="397" y1="363" x2="332" y2="363"/>
+    <text class="lab" x="336" y="392">sites</text>
+    <line class="f" x1="667" y1="363" x2="732" y2="363"/>
+    <text class="lab" x="672" y="392">bases</text>
+    <!-- column C -->
+    <line class="f" x1="889" y1="230" x2="889" y2="288"/>
+    <text class="lab" x="897" y="264">mask, forecast</text>
+    <line class="f" x1="889" y1="410" x2="889" y2="468"/>
+    <text class="lab" x="897" y="444">routes per drone</text>
+    <line class="f" x1="889" y1="590" x2="889" y2="654"/>
+    <text class="lab" x="897" y="628">missions</text>
+    <!-- row 3 -->
+    <line class="f" x1="330" y1="492" x2="732" y2="492"/>
+    <text class="lab" x="440" y="484">approved missions</text>
+    <line class="f" x1="397" y1="543" x2="332" y2="543"/>
+    <text class="lab" x="336" y="572">replay</text>
+    <line class="f" x1="734" y1="543" x2="669" y2="543"/>
+    <text class="lab" x="672" y="572">files</text>
+    <line class="f" x1="300" y1="590" x2="470" y2="654"/>
+    <text class="lab" x="370" y="610">unreachable points</text>
+  </svg>
+</div>
+</body></html>

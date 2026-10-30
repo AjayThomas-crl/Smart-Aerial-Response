@@ -1,0 +1,75 @@
+{
+ "city": "varanasi",
+ "grow": 0,
+ "weather": {
+  "precipitation": 10.0,
+  "wind_speed_10m": 30.0,
+  "wind_direction_10m": 270.0
+ },
+ "max_bases": 5,
+ "mode": "fixed",
+ "exit_code": 0,
+ "wall_s": 35.812663078308105,
+ "mask_coverage": 0.09522459893048128,
+ "hubs_given": 5,
+ "hubs_available": 4,
+ "hubs_flooded": [
+  [
+   666,
+   114
+  ]
+ ],
+ "drop_points": 29,
+ "visited": 22,
+ "bases": [
+  [
+   270,
+   210
+  ],
+  [
+   354,
+   390
+  ],
+  [
+   558,
+   546
+  ],
+  [
+   522,
+   210
+  ]
+ ],
+ "sorties": 9,
+ "deliveries_s": [
+  146.03273291860768,
+  154.1893337056343,
+  161.4810873923387,
+  177.8049116889611,
+  255.1893337056343,
+  325.2901091926119,
+  357.1752598110766,
+  376.088001745179,
+  459.21205981107664,
+  490.68113630445936,
+  591.715022238534,
+  631.5403609638092,
+  754.8541606885016,
+  839.9566270279507,
+  888.5138994203068,
+  989.5138994203068,
+  1155.348948430424,
+  1475.6701067428273,
+  1623.1124400171186,
+  1648.9796847663076,
+  1795.7584090739958,
+  2142.193973803449
+ ],
+ "makespan_s": 2326.5771538770477,
+ "unreachable": 7,
+ "max_battery": 0.7564352732082175,
+ "crossings": 0,
+ "outcome": "MULTI_BASE_4",
+ "selection_coverable": 22,
+ "best_single_reach": 13,
+ "session": "/home/ajay/Projects/Smart-Aerial-Response/research/hub_study/runs/fixed/event/varanasi_g0_heavy/session_20261028_150726"
+}

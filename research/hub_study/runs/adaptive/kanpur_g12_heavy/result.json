@@ -1,0 +1,59 @@
+{
+ "city": "kanpur",
+ "grow": 12,
+ "weather": {
+  "precipitation": 10.0,
+  "wind_speed_10m": 30.0,
+  "wind_direction_10m": 270.0
+ },
+ "max_bases": 6,
+ "mode": "adaptive",
+ "exit_code": 0,
+ "wall_s": 34.7528133392334,
+ "mask_coverage": 0.3934303683737646,
+ "hubs_given": null,
+ "hubs_available": null,
+ "drop_points": 13,
+ "visited": 12,
+ "bases": [
+  [
+   258,
+   66
+  ],
+  [
+   654,
+   582
+  ],
+  [
+   402,
+   738
+  ],
+  [
+   18,
+   426
+  ]
+ ],
+ "sorties": 8,
+ "deliveries_s": [
+  143.14621391498818,
+  146.9694384433783,
+  147.34288781490253,
+  174.63495243140082,
+  272.7994039633867,
+  333.0849319467671,
+  401.36248015718525,
+  588.5741588994424,
+  813.8733759547292,
+  1131.6582676466546,
+  1707.6267292411776,
+  2293.558588068477
+ ],
+ "makespan_s": 2509.717191855977,
+ "unreachable": 0,
+ "max_battery": 0.7899360267354271,
+ "crossings": 0,
+ "outcome": "MULTI_BASE_4",
+ "selection_coverable": 13,
+ "best_single_reach": 8,
+ "session": "/home/ajay/Projects/Smart-Aerial-Response/research/hub_study/runs/adaptive/kanpur_g12_heavy/session_20261028_150552"
+}

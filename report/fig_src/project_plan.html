@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Project plan</title><link rel="stylesheet" href="common.css">
+<style>
+/* Gantt chart of the Fall Semester 2026 project plan; bars placed by date in the script below. */
+.g{position:relative;width:1064px}
+.row{display:grid;grid-template-columns:300px 1fr;align-items:center;height:44px;border-bottom:1px solid #e4e4e4}
+.row .t{font-size:15.5px;padding-right:10px;line-height:1.2}
+.row .t small{display:block;color:#666;font-size:13px}
+.lane{position:relative;height:100%}
+.bar{position:absolute;top:11px;height:22px;border-radius:4px;background:#5c5c5c}
+.bar.acc{background:#0b7a75}
+.hdr{display:grid;grid-template-columns:300px 1fr;height:34px;border-bottom:2px solid #444}
+.hdr .lane div{position:absolute;top:8px;font-size:14px;font-weight:bold;color:#333}
+.grid{position:absolute;top:34px;bottom:0;border-left:1px dashed #bbb}
+.dl{position:absolute;top:26px;bottom:-8px;border-left:2.5px solid #c0392b}
+.dlt{position:absolute;font-size:13px;color:#c0392b;font-weight:bold;white-space:nowrap}
+.legend{margin-top:16px;font-size:14px;color:#444}
+.sw{display:inline-block;width:18px;height:12px;border-radius:3px;vertical-align:-1px;margin:0 4px 0 12px}
+</style></head><body>
+<div class="g" id="g">
+ <div class="hdr"><div></div><div class="lane" id="months"></div></div>
+</div>
+<div class="legend"><span class="sw" style="background:#5c5c5c;margin-left:0"></span>planner, data and demo work
+<span class="sw" style="background:#0b7a75"></span>smart-city / IoT work &nbsp;&nbsp;<span style="color:#c0392b;font-weight:bold">|</span> submission: VTOP report 3 Nov, Teams upload 4 Nov 2026</div>
+<script>
+const T0 = new Date("2026-08-03"), T1 = new Date("2026-11-08"), LANE = 764;
+const x = d => (new Date(d) - T0) / (T1 - T0) * LANE;
+const tasks = [
+  ["Requirements and literature", "smart-city needs, flood relief UAV papers", "2026-08-03", "2026-08-23", 0],
+  ["Data and flood maps", "Varanasi and Kanpur 2025 flood extents", "2026-08-17", "2026-09-06", 0],
+  ["Planner integration", "latest A.D.A.P.T. main, multi-drone swarm", "2026-08-31", "2026-09-27", 0],
+  ["Command-centre demo", "live planner log, swarm replay", "2026-09-21", "2026-10-18", 0],
+  ["IoT layer", "MQTT broker, LoRaWAN codec, trigger engine", "2026-10-05", "2026-10-31", 1],
+  ["Dock-siting study", "180 planner runs, robust docks", "2026-10-12", "2026-10-30", 1],
+  ["Testing", "unit, integration, system, scenario", "2026-10-19", "2026-11-01", 0],
+  ["Report, paper, PPT, video", "deliverables and submission", "2026-10-19", "2026-11-03", 1],
+];
+const g = document.getElementById("g");
+for (const [t, sub, a, b, acc] of tasks) {
+  const r = document.createElement("div"); r.className = "row";
+  r.innerHTML = `<div class="t">${t}<small>${sub}</small></div><div class="lane"><div class="bar${acc ? " acc" : ""}" style="left:${x(a)}px;width:${x(b) - x(a)}px"></div></div>`;
+  g.appendChild(r);
+}
+const m = document.getElementById("months");
+for (const [d, name] of [["2026-08-03", "August"], ["2026-09-01", "September"], ["2026-10-01", "October"], ["2026-11-01", "Nov"]])
+  m.innerHTML += `<div style="left:${x(d) + 6}px">${name}</div>`;
+for (const d of ["2026-09-01", "2026-10-01", "2026-11-01"]) {
+  const v = document.createElement("div"); v.className = "grid"; v.style.left = 300 + x(d) + "px"; g.appendChild(v);
+}
+const dl = document.createElement("div"); dl.className = "dl"; dl.style.left = 300 + x("2026-11-03") + "px"; g.appendChild(dl);
+</script>
+</body></html>

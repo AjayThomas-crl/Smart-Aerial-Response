@@ -1,0 +1,10 @@
+/* Report figures: white ground, dark grey ink, one teal accent; sized for a 16 cm wide A4 column. */
+*{box-sizing:border-box}
+body{margin:0;width:1100px;background:#fff;font-family:"Liberation Sans",Arial,sans-serif;color:#1d1d1d;padding:18px}
+.box{border:2px solid #444;border-radius:8px;padding:8px 12px;background:#fff;font-size:17px;line-height:1.3}
+.box b{display:block;font-size:18px}
+.box i{font-style:normal;color:#555}
+.acc{border-color:#0b7a75;background:#e8f4f3}
+.dash{border-style:dashed}
+.note{font-size:15px;color:#444}
+svg text{font-family:"Liberation Sans",Arial,sans-serif;fill:#1d1d1d}

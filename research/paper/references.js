@@ -1,0 +1,22 @@
+// IEEE-style reference list for the dock-siting paper, in citation order.
+module.exports = [
+  "N. Mohamed, J. Al-Jaroodi, I. Jawhar, A. Idries, and F. Mohammed, \"Unmanned aerial vehicles applications in future smart cities,\" *Technological Forecasting and Social Change*, vol. 153, Art. no. 119293, 2020.",
+  "M. Erdelj, E. Natalizio, K. R. Chowdhury, and I. F. Akyildiz, \"Help from the sky: Leveraging UAVs for disaster management,\" *IEEE Pervasive Computing*, vol. 16, no. 1, pp. 24–32, 2017.",
+  "DT Next, \"Over Rs 98 crore allocated for 5-year ICCC operations, integration,\" Chennai, 2025. [Online]. Available: https://www.dtnext.in/news/tamilnadu/over-rs-98-crore-allocated-for-5-year-iccc-operations-integration",
+  "Ministry of Housing and Urban Affairs, Government of India, \"Smart Cities Mission.\" [Online]. Available: https://smartcities.gov.in",
+  "T. Saha, A. Vatsal, A. Thomas K, and A. K, \"A.D.A.P.T.: Autonomous Drone for Adaptive Path Tracking,\" open-source software, 2026. [Online]. Available: https://github.com/TSaha4/A.D.A.P.T.-Autonomous-Drone-for-Adaptive-Path-Tracking",
+  "A. Zanella, N. Bui, A. Castellani, L. Vangelista, and M. Zorzi, \"Internet of Things for smart cities,\" *IEEE Internet of Things Journal*, vol. 1, no. 1, pp. 22–32, 2014.",
+  "M. I. Zakaria, W. A. Jabbar, and N. Sulaiman, \"Development of a smart sensing unit for LoRaWAN-based IoT flood monitoring and warning system in catchment areas,\" *Internet of Things and Cyber-Physical Systems*, vol. 3, pp. 249–261, 2023.",
+  "G. Rabta, C. Wankmüller, and G. Reiner, \"A drone fleet model for last-mile distribution in disaster relief operations,\" *International Journal of Disaster Risk Reduction*, vol. 28, pp. 107–112, 2018.",
+  "C. Toregas, R. Swain, C. ReVelle, and L. Bergman, \"The location of emergency service facilities,\" *Operations Research*, vol. 19, no. 6, pp. 1363–1373, 1971.",
+  "R. Church and C. ReVelle, \"The maximal covering location problem,\" *Papers of the Regional Science Association*, vol. 32, no. 1, pp. 101–118, 1974.",
+  "L. V. Snyder, \"Facility location under uncertainty: A review,\" *IIE Transactions*, vol. 38, no. 7, pp. 547–564, 2006.",
+  "A. Pulver and R. Wei, \"Optimizing the spatial location of medical drones,\" *Applied Geography*, vol. 90, pp. 9–16, 2018.",
+  "J. J. Boutilier, S. C. Brooks, A. Janmohamed, A. Byers, J. E. Buick, C. Zhan, A. P. Schoellig, S. Cheskes, L. J. Morrison, and T. C. Y. Chan, \"Optimizing a drone network to deliver automated external defibrillators,\" *Circulation*, vol. 135, no. 25, pp. 2454–2465, 2017.",
+  "C. Chin, A. Saravanan, H. Balakrishnan, and A. Andreeva-Mori, \"Strategic planning of aerial assets for disaster response: Enabling efficient and equitable access to drone-based search resources,\" in *Proc. 15th USA/Europe Air Traffic Management Research and Development Seminar (ATM2023)*, 2023.",
+  "S. Koenig and M. Likhachev, \"D* Lite,\" in *Proc. 18th National Conference on Artificial Intelligence (AAAI)*, 2002, pp. 476–483.",
+  "OASIS, \"MQTT Version 5.0,\" OASIS Standard, Mar. 2019. [Online]. Available: https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html",
+  "LoRa Alliance, \"RP002-1.0.4 LoRaWAN Regional Parameters,\" 2022. [Online]. Available: https://resources.lora-alliance.org",
+  "ArduPilot Dev Team, \"Complete parameter list: WPNAV_SPEED_UP, WPNAV_SPEED_DN, LAND_SPEED.\" [Online]. Available: https://ardupilot.org/copter/docs/parameters.html",
+  "European Space Agency, \"Copernicus Sentinel-1 mission.\" [Online]. Available: https://sentinels.copernicus.eu",
+];

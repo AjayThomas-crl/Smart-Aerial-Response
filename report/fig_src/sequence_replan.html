@@ -1,0 +1,85 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Sequence: sensor-triggered re-plan</title><link rel="stylesheet" href="common.css">
+<style>
+/* UML sequence diagram of one sensor-triggered re-plan, names as in iot/smartcity_iot.py. */
+.hd{fill:#fff;stroke:#444;stroke-width:2}
+.hdA{fill:#e8f4f3;stroke:#0b7a75;stroke-width:2.2}
+.hn{font-size:15px;font-weight:bold;text-anchor:middle}
+.hs{font-size:12.5px;fill:#555;text-anchor:middle}
+.ll{stroke:#888;stroke-width:1.4;stroke-dasharray:5 4}
+.m{stroke:#1d1d1d;stroke-width:1.6;marker-end:url(#a);fill:none}
+.r{stroke:#1d1d1d;stroke-width:1.4;stroke-dasharray:6 4;marker-end:url(#o);fill:none}
+.ml{font-size:13.5px;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+.act{fill:#e8f4f3;stroke:#0b7a75;stroke-width:1.6}
+.fr{fill:none;stroke:#444;stroke-width:1.4}
+.ft{font-size:13px;font-weight:bold}
+.fg{font-size:13px;fill:#444}
+.nb{font-size:12.5px;fill:#fff;font-weight:bold;text-anchor:middle}
+</style></head><body>
+<svg width="1064" height="800" viewBox="0 0 1064 800">
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d1d1d"/></marker>
+<marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10" fill="none" stroke="#1d1d1d" stroke-width="1.5"/></marker>
+</defs>
+<!-- lifeline heads: x centres 66 198 330 462 594 726 858 990 -->
+<g>
+<rect class="hd" x="8" y="10" width="116" height="52" rx="4"/><text class="hn" x="66" y="33">DockSim</text><text class="hs" x="66" y="51">run_docks()</text>
+<rect class="hd" x="140" y="10" width="116" height="52" rx="4"/><text class="hn" x="198" y="33">GaugeSim</text><text class="hs" x="198" y="51">run_gauges()</text>
+<rect class="hd" x="272" y="10" width="116" height="52" rx="4"/><text class="hn" x="330" y="33">LoRaWAN</text><text class="hs" x="330" y="51">lorawan_bridge()</text>
+<rect class="hd" x="404" y="10" width="116" height="52" rx="4"/><text class="hn" x="462" y="33">MQTT broker</text><text class="hs" x="462" y="51">amqtt</text>
+<rect class="hdA" x="536" y="10" width="116" height="52" rx="4"/><text class="hn" x="594" y="33">TriggerEngine</text><text class="hs" x="594" y="51">Decision layer</text>
+<rect class="hd" x="668" y="10" width="116" height="52" rx="4"/><text class="hn" x="726" y="33">Planner</text><text class="hs" x="726" y="51">run_scenario.py</text>
+<rect class="hd" x="800" y="10" width="116" height="52" rx="4"/><text class="hn" x="858" y="33">ICCC</text><text class="hs" x="858" y="51">dashboard</text>
+<rect class="hd" x="932" y="10" width="116" height="52" rx="4"/><text class="hn" x="990" y="33">Drones</text><text class="hs" x="990" y="51">via their docks</text>
+</g>
+<line class="ll" x1="66" y1="62" x2="66" y2="790"/><line class="ll" x1="198" y1="62" x2="198" y2="790"/>
+<line class="ll" x1="330" y1="62" x2="330" y2="790"/><line class="ll" x1="462" y1="62" x2="462" y2="790"/>
+<line class="ll" x1="594" y1="62" x2="594" y2="790"/><line class="ll" x1="726" y1="62" x2="726" y2="790"/>
+<line class="ll" x1="858" y1="62" x2="858" y2="790"/><line class="ll" x1="990" y1="62" x2="990" y2="790"/>
+
+<!-- loop frame: periodic reports -->
+<rect class="fr" x="20" y="78" width="600" height="250"/>
+<path d="M20 78h108v20l-10 10H20z" fill="#fff" stroke="#444" stroke-width="1.4"/><text class="ft" x="28" y="98">loop</text>
+<text class="fg" x="140" y="96">[docks every 1 s, gauges every 0.5 s]</text>
+
+<line class="m" x1="66" y1="130" x2="460" y2="130"/>
+<text class="ml" x="80" y="124">publish dock/&lt;id&gt;/status {water_cm, online}</text>
+<line class="m" x1="462" y1="166" x2="592" y2="166"/>
+<text class="ml" x="470" y="160">on_message()</text>
+<line class="m" x1="198" y1="206" x2="328" y2="206"/>
+<text class="ml" x="204" y="200">uplink 12 B</text>
+<line class="m" x1="330" y1="246" x2="460" y2="246"/>
+<text class="ml" x="336" y="240">gauge/&lt;id&gt;/level</text>
+<text class="ml" x="336" y="264" style="font-size:12.5px;fill:#555">decode_uplink()</text>
+<line class="m" x1="462" y1="300" x2="592" y2="300"/>
+<text class="ml" x="470" y="294">on_message()</text>
+
+<!-- alt frame: stage rose -->
+<rect class="fr" x="440" y="346" width="604" height="304"/>
+<path d="M440 346h56v20l-10 10H440z" fill="#fff" stroke="#444" stroke-width="1.4"/><text class="ft" x="448" y="366">alt</text>
+<text class="fg" x="506" y="366">[level ≥ warning and flood_stage(level) &gt; stage]</text>
+
+<rect class="act" x="587" y="382" width="14" height="206"/>
+<path class="m" d="M601 396 h40 v22 h-38"/>
+<text class="ml" x="648" y="404">flood_stage()</text>
+<path class="m" d="M601 436 h40 v22 h-38"/>
+<text class="ml" x="648" y="452">dry_docks()</text>
+<line class="m" x1="601" y1="490" x2="724" y2="490"/>
+<text class="ml" x="606" y="484">replan(): --grow, --hubs</text>
+<rect class="act" x="719" y="492" width="14" height="44"/>
+<line class="r" x1="719" y1="536" x2="603" y2="536"/>
+<text class="ml" x="610" y="530">result.json</text>
+<line class="m" x1="587" y1="576" x2="464" y2="576"/>
+<text class="ml" x="470" y="570">iccc/plan</text>
+<line class="m" x1="462" y1="616" x2="856" y2="616"/>
+<text class="ml" x="640" y="610">plan summary: stage, docks dry, served, time</text>
+
+<!-- operator and dispatch -->
+<path class="m" d="M858 668 h40 v22 h-38"/>
+<text class="ml" x="904" y="676">review,</text><text class="ml" x="904" y="694">approve</text>
+<line class="m" x1="858" y1="722" x2="988" y2="722"/>
+<text class="ml" x="866" y="716">QGC WPL missions</text>
+<line class="r" x1="990" y1="764" x2="464" y2="764"/>
+<text class="ml" x="660" y="758">telemetry 1 Hz (drone/&lt;id&gt;/telemetry)</text>
+</svg>
+</body></html>

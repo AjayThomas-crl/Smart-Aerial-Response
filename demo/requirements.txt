@@ -1,0 +1,6 @@
+# Enough to run the planner (adapt_core) and the live demo server.
+numpy
+opencv-python
+matplotlib
+requests
+python-dotenv

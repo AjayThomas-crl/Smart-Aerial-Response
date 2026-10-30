@@ -1,0 +1,5 @@
+{
+ "varanasi": 27.152844667434692,
+ "kanpur": 53.715396881103516,
+ "_note": "single run, idle 16-thread laptop, stage 0 heavy, adaptive K=6"
+}
