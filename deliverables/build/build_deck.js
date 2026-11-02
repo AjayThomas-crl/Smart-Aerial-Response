@@ -140,7 +140,7 @@ function testRows() {
     { text: `${A.guide.name}, ${A.guide.designation}, SCOPE, VIT Vellore`, options: { breakLine: true } },
     { text: `${A.course} (Internet of Things)  ·  ${A.semester}`, options: {} },
   ], { x: 0.6, y: 3.65, w: 8.8, h: 1.2, fontSize: 13, color: "C9D4DF", paraSpaceAfter: 6 });
-  s.addNotes(`Good morning. We are ${A.students.map(x => x.name).join(" and ")}, working under ${A.guide.name}. Our project is the IoT layer that lets a smart city's command centre trigger drone relief planning from river gauges, and decide where drone docks should be installed, shown on Varanasi and Kanpur.`);
+  s.addNotes(`Good morning. We are ${A.students.map(x => x.name).join(", ").replace(/, ([^,]*)$/, " and $1")}, working under ${A.guide.name}. Our project is the IoT layer that lets a smart city's command centre trigger drone relief planning from river gauges, and decide where drone docks should be installed, shown on Varanasi and Kanpur.`);
 
   // ===== 2. Abstract =====
   pres.addSection({ title: "Abstract" });
@@ -365,7 +365,7 @@ function testRows() {
   iconDisc(s, I.doc, 6.4, 1.35, 0.55, HEX.navy, "paper icon");
   text(s, "IEEE-format research paper", { x: 7.1, y: 1.38, w: 2.3, h: 0.5, fontSize: 14, bold: true, color: C.text2, valign: "middle" });
   text(s, "Flood-Resilient Siting of IoT Drone Docks for Smart-City Relief: A Scenario Study of Varanasi and Kanpur", { x: 6.4, y: 2.05, w: 2.95, h: 1.0, fontSize: 12, italic: true, color: C.text1 });
-  text(s, [A.guide.name, ...(A.paper_extra_authors || []).map(x => x.name), ...A.students.map(x => x.name)].join(", "), { x: 6.4, y: 3.1, w: 2.95, h: 0.5, fontSize: 12, bold: true, color: C.text1 });
+  text(s, [A.guide.name, ...A.paper_order].join(", "), { x: 6.4, y: 3.1, w: 2.95, h: 0.5, fontSize: 12, bold: true, color: C.text1 });
   text(s, "6 pages, two-column IEEE format; built on 180 new planner runs", { x: 6.4, y: 3.55, w: 2.95, h: 0.45, fontSize: 11, color: C.accent6 });
   s.addNotes("For a city, six dock-and-drone bundles are the main cost, at roughly 12 to 20 lakh rupees each at list price; the twenty gauges are a small fraction. These are indicative list prices, not quotes. Our unique outcome is an IEEE-format research paper on dock siting, with our guide as first author.");
 

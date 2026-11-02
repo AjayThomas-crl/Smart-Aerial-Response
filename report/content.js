@@ -280,7 +280,7 @@ module.exports = function content(H, D) {
   add(bullet("**Better infrastructure decisions:** the dock study gives planners an evidence-based list of dock sites that survive future floods."));
   add(bullet("**Safer operations:** human approval, battery limits, no crossing routes and a clear list of points left for responders."));
   add(H2("Unique Outcome: Research Paper"));
-  add(P(`The dock-siting study and the IoT layer are written up as an IEEE-format research paper, *"Flood-Resilient Siting of IoT Drone Docks for Smart-City Relief: A Scenario Study of Varanasi and Kanpur"*, by ${[D.authors.guide, ...(D.authors.paper_extra_authors || []), ...D.authors.students].map(a => a.name).join(", ").replace(/, ([^,]*)$/, " and $1")}. It asks where a smart city should install drone docks so they keep working as the flood rises, and reports the results of Section 6.2 in full.`));
+  add(P(`The dock-siting study and the IoT layer are written up as an IEEE-format research paper, *"Flood-Resilient Siting of IoT Drone Docks for Smart-City Relief: A Scenario Study of Varanasi and Kanpur"*, by ${[D.authors.guide.name, ...D.authors.paper_order].join(", ").replace(/, ([^,]*)$/, " and $1")}. It asks where a smart city should install drone docks so they keep working as the flood rises, and reports the results of Section 6.2 in full.`));
   add(H2("Cost Analysis"));
   add(P(`Table 6.3 gives an indicative hardware cost for one city with six docks and twenty gauges, using list prices from Indian resellers found in October 2026. Prices vary with configuration, software licences and maintenance contracts, so the total is an order of magnitude, not a quotation.`));
   add(table("Indicative hardware cost for one city", ["Item", "Quantity", "Unit price (list)", "Total"], [

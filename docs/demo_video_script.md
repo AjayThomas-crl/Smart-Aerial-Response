@@ -2,7 +2,7 @@
 
 Recorded project demonstration for **Smart Aerial Response: An Autonomous UAV Framework for Resilient Flood
 Emergency Management in Smart Cities** (Design of Smart Cities). The target is about 9 minutes, leaving a minute
-of slack. Two voices work well: Dharani narrates sections 1–3, Sukant narrates sections 4–7.
+of slack. Three voices work well: Dharani narrates sections 1–3, Sukant sections 4–5 and Ajay sections 6–7.
 
 ## Before you press record
 
@@ -64,7 +64,7 @@ Run all of these from the project folder (`~/Projects/Smart-Aerial-Response`).
 **Show:** the PPT title slide, then the problem slide.
 
 **Say:**
-> "We are Dharani I S and Sukant G, presenting Smart Aerial Response under Dr. Swarnalatha P. When the Ganga
+> "We are Ajay Thomas, Dharani I S and Sukant G, presenting Smart Aerial Response under Dr. Swarnalatha P. When the Ganga
 > floods, as it did in Varanasi and Kanpur in 2025, streets go under water first and boats arrive late. Small
 > drones can carry food, water and medicine to people who are cut off. But a smart city has to answer three
 > questions in minutes. Where is the water? Which drone goes where? And where can drones even take off when the

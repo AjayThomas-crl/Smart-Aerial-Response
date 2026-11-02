@@ -68,7 +68,7 @@ const conclusion = [
   H1("Conclusion"),
   P(`This paper treated relief-drone launch sites as smart-city infrastructure and asked where IoT drone docks should be installed so that they keep working as a flood rises. Using an open-source relief planner as an evaluator on 30 scenarios for Varanasi and Kanpur, docks chosen for both planner support and survival kept coverage close to freely re-sited bases on flood stages they were not chosen from, while docks sited from a single event lost most of their value as the water rose. A five-layer IoT architecture with LoRaWAN gauges and MQTT-connected docks needs under 10 kbit/s per city and can re-plan within about a minute. Future work will use terrain-based flood scenarios, georeferenced maps, dock costs and a field trial with one dock.`),
   new Paragraph({ spacing: { before: 120, after: 60 }, children: [run("Acknowledgment", { size: 20, smallCaps: true })], alignment: AlignmentType.CENTER }),
-  P(`The relief planner used as the evaluator in this study is the open-source A.D.A.P.T. system [5] by T. Saha, A. Vatsal, A. Thomas K (a co-author of this paper) and A. K; a manuscript describing that planner is under review elsewhere. This paper does not describe or evaluate the planner itself. The work was carried out in the Design of Smart Cities course at the School of Computer Science and Engineering, VIT.`),
+  P(`The relief planner used as the evaluator in this study is the open-source A.D.A.P.T. system [5] by T. Saha, A. Vatsal, A. Thomas K (one of the present authors) and A. K; a manuscript describing that planner is under review elsewhere. This paper does not describe or evaluate the planner itself. The work was carried out in the Design of Smart Cities course at the School of Computer Science and Engineering, VIT.`),
 ];
 
 const references = [
@@ -110,7 +110,7 @@ const pageProps = (cols, first) => ({
   type: first ? undefined : SectionType.CONTINUOUS,
 });
 const doc = new Document({
-  creator: [B.AUTHORS.guide.name, ...(B.AUTHORS.paper_extra_authors || []).map(x => x.name), ...B.AUTHORS.students.map(x => x.name)].join("; "), title: "Flood-Resilient Siting of IoT Drone Docks for Smart-City Relief",
+  creator: [B.AUTHORS.guide.name, ...B.AUTHORS.paper_order].join("; "), title: "Flood-Resilient Siting of IoT Drone Docks for Smart-City Relief",
   styles: { default: { document: { run: { font: FONT, size: 20 } } } },
   numbering: { config: [{ reference: "bul", levels: [{ level: 0, format: LevelFormat.BULLET, text: "•", alignment: AlignmentType.LEFT,
     style: { paragraph: { indent: { left: 288, hanging: 180 } } } }] }] },

@@ -100,17 +100,18 @@ const front = [
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 },
     children: [run("Flood-Resilient Siting of IoT Drone Docks for Smart-City Relief: A Scenario Study of Varanasi and Kanpur", { size: 44 })] }),
 ];
-// faculty guide is the first author, the two students follow (edit ../authors.json, not this file)
+// faculty guide is the first author, the students follow in paper_order (edit ../authors.json, not this file)
 const AUTHORS = JSON.parse(fs.readFileSync(path.join(HERE, "..", "authors.json")));
 const author = (name, second, email) => [
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 0 }, children: [run(name, { size: 22, italics: name.startsWith("[") })] }),
   ...[second, "School of Computer Science and Engineering", "Vellore Institute of Technology", "Vellore, India", email].filter(Boolean)
     .map(t => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 0 }, children: [run(t, { size: 16, italics: t.startsWith("[") })] })),
 ];
-// the paper lists no register numbers; Ajay Thomas K (not in the course report) is its second author
+// the paper lists no register numbers
+const PAPER_AUTHORS = AUTHORS.paper_order.map(n => AUTHORS.students.find(s => s.name === n));
 const AUTHOR_CELLS = [
   [AUTHORS.guide.name, AUTHORS.guide.designation, AUTHORS.guide.email],
-  ...[...(AUTHORS.paper_extra_authors || []), ...AUTHORS.students].map(s => [s.name, null, s.email]),
+  ...PAPER_AUTHORS.map(s => [s.name, null, s.email]),
 ];
 const authorTable = new Table({
   width: { size: FULL_DXA, type: WidthType.DXA }, columnWidths: AUTHOR_CELLS.map(() => FULL_DXA / AUTHOR_CELLS.length),

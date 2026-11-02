@@ -127,6 +127,7 @@ const H = { run, rich, P, bullet, numbered, code, chapter, H2, H3, figure, table
 
 // ---------------------------------------------------------------- front matter
 const A = D.authors;
+const listNames = xs => xs.length > 1 ? `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}` : xs.join("");
 const TITLE = "Smart Aerial Response: An Autonomous UAV Framework for Resilient Flood Emergency Management in Smart Cities";
 const centre = (t, o = {}) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: o.after ?? 120, line: o.line || 360 },
   children: Array.isArray(t) ? t : rich(t, o) });
@@ -164,7 +165,7 @@ function signature(lines) {
   return lines.map(t => new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { after: 0, line: 360 }, children: [run(t, { bold: true })] }));
 }
 function declaration() {
-  const names = A.students.map(s => `${s.name} (${s.reg})`).join(" and ");
+  const names = listNames(A.students.map(s => `${s.name} (${s.reg})`));
   return [
     heading("DECLARATION"),
     P(`We hereby declare that the project entitled **"${TITLE}"** submitted by us, ${names}, for the course ${A.course} of the ${A.programme} programme at VIT, is a record of bonafide work carried out by us under the supervision of ${A.guide.name}.`, { line: 360 }),
@@ -174,7 +175,7 @@ function declaration() {
   ];
 }
 function certificate() {
-  const names = A.students.map(s => `${s.name} (${s.reg})`).join(" and ");
+  const names = listNames(A.students.map(s => `${s.name} (${s.reg})`));
   return [
     heading("CERTIFICATE"),
     P(`This is to certify that the project entitled **"${TITLE}"** submitted by **${names}**, School of Computer Science and Engineering, VIT, for the course ${A.course}, is a record of bonafide work carried out by them under my supervision during the ${A.semester}, as per the VIT code of academic and research ethics.`, { line: 360 }),

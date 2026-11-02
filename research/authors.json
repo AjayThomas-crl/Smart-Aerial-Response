@@ -6,6 +6,11 @@
   },
   "students": [
     {
+      "name": "Ajay Thomas",
+      "reg": "23BCT0262",
+      "email": "ajaythomas.k2023@vitstudent.ac.in"
+    },
+    {
       "name": "Dharani I S",
       "reg": "23BCT0222",
       "email": "dharani.is2023@vitstudent.ac.in"
@@ -19,10 +24,9 @@
   "course": "Design of Smart Cities",
   "semester": "Fall Semester 2026-27",
   "programme": "B.Tech. Computer Science and Engineering with Specialization in Internet of Things",
-  "paper_extra_authors": [
-    {
-      "name": "Ajay Thomas K",
-      "email": "ajaythomas.k2023@vitstudent.ac.in"
-    }
+  "paper_order": [
+    "Ajay Thomas",
+    "Dharani I S",
+    "Sukant G"
   ]
 }

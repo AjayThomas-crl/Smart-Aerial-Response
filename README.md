@@ -6,7 +6,7 @@ Course project for **Design of Smart Cities** (VIT, Fall Semester 2026-27). It a
 
 The planning algorithms and their evaluation belong to the A.D.A.P.T. project and are described in its own manuscript; this repository claims none of the planner's results.
 
-Team: Dharani I S and Sukant G; faculty guide Dr. Swarnalatha P, Professor Grade 1, SCOPE. The research paper adds Ajay Thomas K as second author. Names come from `research/authors.json`, which the report, paper and slides all read.
+Team: Ajay Thomas (23BCT0262), Dharani I S (23BCT0222) and Sukant G (23BCT0184); faculty guide Dr. Swarnalatha P, Professor Grade 1, SCOPE. In the research paper Ajay Thomas is second author. Names come from `research/authors.json`, which the report, paper and slides all read.
 
 ## Submission contents
 

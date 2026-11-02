@@ -1,14 +1,14 @@
 {
- "date": "2026-10-30",
+ "date": "2026-11-02",
  "n": 6,
  "results": {
   "IEEE research paper": {
-   "words": 4217,
+   "words": 4215,
    "against": {
     "A.D.A.P.T. journal manuscript (under review)": {
      "percent": 1.09,
      "shared": 46,
-     "grams": 4212,
+     "grams": 4210,
      "passages": [
       {
        "words": 48,
@@ -25,9 +25,9 @@
      ]
     },
     "Earlier course report (deliverables/)": {
-     "percent": 0.09,
+     "percent": 0.1,
      "shared": 4,
-     "grams": 4212,
+     "grams": 4210,
      "passages": [
       {
        "words": 8,
@@ -40,9 +40,9 @@
      ]
     },
     "Course project report": {
-     "percent": 2.75,
-     "shared": 116,
-     "grams": 4212,
+     "percent": 2.78,
+     "shared": 117,
+     "grams": 4210,
      "passages": [
       {
        "words": 18,
@@ -58,6 +58,10 @@
       },
       {
        "words": 10,
+       "text": "dr swarnalatha p ajay thomas dharani i s sukant g"
+      },
+      {
+       "words": 10,
        "text": "against 49 and 45 for docks sited from a single"
       },
       {
@@ -70,10 +74,6 @@
       },
       {
        "words": 9,
-       "text": "dr swarnalatha p ajay thomas k dharani i s"
-      },
-      {
-       "words": 9,
        "text": "professor grade 1 school of computer science and engineering"
       }
      ]
@@ -81,12 +81,12 @@
    }
   },
   "Course project report": {
-   "words": 7787,
+   "words": 7799,
    "against": {
     "A.D.A.P.T. journal manuscript (under review)": {
      "percent": 0.08,
      "shared": 6,
-     "grams": 7782,
+     "grams": 7794,
      "passages": [
       {
        "words": 8,
@@ -105,7 +105,7 @@
     "Earlier course report (deliverables/)": {
      "percent": 0.64,
      "shared": 50,
-     "grams": 7782,
+     "grams": 7794,
      "passages": [
       {
        "words": 15,
@@ -142,9 +142,9 @@
      ]
     },
     "IEEE research paper": {
-     "percent": 1.75,
-     "shared": 136,
-     "grams": 7782,
+     "percent": 1.78,
+     "shared": 139,
+     "grams": 7794,
      "passages": [
       {
        "words": 18,
