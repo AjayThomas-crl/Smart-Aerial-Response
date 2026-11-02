@@ -3,12 +3,12 @@
  "n": 6,
  "results": {
   "IEEE research paper": {
-   "words": 4215,
+   "words": 4541,
    "against": {
     "A.D.A.P.T. journal manuscript (under review)": {
-     "percent": 1.09,
+     "percent": 1.01,
      "shared": 46,
-     "grams": 4210,
+     "grams": 4536,
      "passages": [
       {
        "words": 48,
@@ -25,32 +25,28 @@
      ]
     },
     "Earlier course report (deliverables/)": {
-     "percent": 0.1,
-     "shared": 4,
-     "grams": 4210,
+     "percent": 0.04,
+     "shared": 2,
+     "grams": 4536,
      "passages": [
       {
-       "words": 8,
-       "text": "runs an integrated command and control centre iccc"
-      },
-      {
-       "words": 6,
-       "text": "food water and medicine to people"
+       "words": 7,
+       "text": "an integrated command and control centre iccc"
       }
      ]
     },
     "Course project report": {
-     "percent": 2.78,
-     "shared": 117,
-     "grams": 4210,
+     "percent": 2.25,
+     "shared": 102,
+     "grams": 4536,
      "passages": [
       {
        "words": 18,
        "text": "flood resilient siting of iot drone docks for smart city relief a scenario study of varanasi and kanpur"
       },
       {
-       "words": 13,
-       "text": "the share of training scenarios in which c is dry and clear of"
+       "words": 17,
+       "text": "and a c is the share of training scenarios in which c is dry and clear of"
       },
       {
        "words": 12,
@@ -66,15 +62,15 @@
       },
       {
        "words": 10,
-       "text": "and the maximal covering location problem of church and revelle"
-      },
-      {
-       "words": 10,
        "text": "is the open source a d a p t system"
       },
       {
        "words": 9,
        "text": "professor grade 1 school of computer science and engineering"
+      },
+      {
+       "words": 9,
+       "text": "share of drop points served as the flood rises"
       }
      ]
     }
@@ -142,8 +138,8 @@
      ]
     },
     "IEEE research paper": {
-     "percent": 1.78,
-     "shared": 139,
+     "percent": 1.57,
+     "shared": 122,
      "grams": 7794,
      "passages": [
       {
@@ -151,8 +147,8 @@
        "text": "flood resilient siting of iot drone docks for smart city relief a scenario study of varanasi and kanpur"
       },
       {
-       "words": 13,
-       "text": "the share of training scenarios in which c is dry and clear of"
+       "words": 17,
+       "text": "and a c is the share of training scenarios in which c is dry and clear of"
       },
       {
        "words": 12,
@@ -161,10 +157,6 @@
       {
        "words": 10,
        "text": "against 49 and 45 for docks sited from a single"
-      },
-      {
-       "words": 10,
-       "text": "and the maximal covering location problem of church and revelle"
       },
       {
        "words": 10,
@@ -177,6 +169,10 @@
       {
        "words": 9,
        "text": "share of drop points served as the flood rises"
+      },
+      {
+       "words": 9,
+       "text": "27 s for varanasi and 54 s for kanpur"
       }
      ]
     }
