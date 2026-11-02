@@ -55,3 +55,6 @@ report/figures/*_route.jpg
 deliverables/Smart_Aerial_Response_Report.docx
 deliverables/build/build_report.js
 deliverables/figures/route_map_*.jpg
+
+# Submission archive (built locally from Final_Submission/)
+*.zip
